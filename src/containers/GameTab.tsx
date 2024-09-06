@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import DataTable, { Column } from "../components/DataTable";
 import GameForm from "../components/GameForm";
-import { useGameContext } from "../contexts/GameContext";
+import { useAddGame, useDeleteGame, useGames, useUpdateGame } from "../api/api";
 
 const GameTab: React.FC = () => {
-  const { games, addGame, removeGame, togglePlayed, editGame } = useGameContext();
+  const { data: games = [], isLoading, error } = useGames();
+  const { mutate: addGame } = useAddGame();
+  const { mutate: updateGame } = useUpdateGame();
+  const { mutate: deleteGame } = useDeleteGame();
+
   const [gameName, setGameName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -16,24 +20,24 @@ const GameTab: React.FC = () => {
   };
 
   const handleEdit = (game: any, key: string, value: string) => {
-    editGame(game, { [key]: value });
+    updateGame({ ...game, [key]: value });
   };
 
   const columns: Column[] = [
-    { 
-      key: 'game', 
-      dataKey: 'gameName', 
-      width: 'w-4/5', // Increased width for game name
-      header: 'Game', 
+    {
+      key: 'game',
+      dataKey: 'gameName',
+      width: 'w-4/5',
+      header: 'Game',
       truncate: true,
       editable: true,
       renderCell: (game, isEditing, onChange, onSubmit) => (
         <div className="flex items-center">
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             className="mr-2 form-checkbox h-5 w-5 text-blue-600"
             checked={game.played}
-            onChange={() => togglePlayed(game)}
+            onChange={() => updateGame({...game, played: !game.played})}
           />
           {isEditing ? (
             <input
@@ -54,23 +58,23 @@ const GameTab: React.FC = () => {
         </div>
       )
     },
-    { key: 'actions', dataKey: 'actions', width: 'w-1/5' } // Removed 'Actions' text
+    { key: 'actions', dataKey: 'actions', width: 'w-1/5' }
   ];
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 text-blue-600">Game Database</h1>
-      <GameForm 
+      <GameForm
         gameName={gameName}
         onGameNameChange={(e: React.ChangeEvent<HTMLInputElement>) => setGameName(e.target.value)}
         onSubmit={handleSubmit}
       />
-      <DataTable 
+      <DataTable
         data={games}
         columns={columns}
-        onToggle={togglePlayed}
-        onRemove={removeGame}
+        onRemove={deleteGame}
         onEdit={handleEdit}
+        isLoading={isLoading}
       />
     </div>
   );

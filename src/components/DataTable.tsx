@@ -13,12 +13,12 @@ export interface Column {
 interface DataTableProps {
   data: any[];
   columns: Column[];
-  onToggle: (item: any) => void;
+  isLoading: boolean;
   onRemove: (item: any) => void;
   onEdit?: (item: any, key: string, value: string) => void;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, columns, onToggle, onRemove, onEdit }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, columns, onRemove, onEdit, isLoading }) => {
   const [editingItem, setEditingItem] = useState<any | null>(null);
   const [editValue, setEditValue] = useState<string>('');
 
@@ -31,6 +31,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, onToggle, onRemove
     if (onEdit && editingItem) {
       const editableColumn = columns.find(col => col.editable);
       if (editableColumn) {
+        console.log('Saving:', editingItem, editableColumn.dataKey, editValue);
         onEdit(editingItem, editableColumn.dataKey, editValue);
       }
     }
@@ -49,7 +50,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, onToggle, onRemove
           <thead className="bg-gray-800 text-white">
             <tr>
               {columns.map((column, index) => (
-                <th key={index} className={`px-4 py-2 text-left ${column.width}`}>
+                <th key={`column-${column.key}-${index}`} className={`px-4 py-2 text-left ${column.width}`}>
                   {column.header}
                 </th>
               ))}
@@ -60,10 +61,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, onToggle, onRemove
       <div className="overflow-y-auto h-64">
         <table className="w-full border-collapse">
           <tbody>
+            {isLoading && (
+              <tr>
+                <td colSpan={columns.length} className="text-center">Loading...</td>
+              </tr>
+            )}
             {data.map((item) => (
-              <tr key={item.id} className="bg-white even:bg-gray-100 hover:bg-gray-200">
+              <tr key={item._id} className="bg-white even:bg-gray-100 hover:bg-gray-200 group">
                 {columns.map((column) => (
-                  <td key={column.key} className={`border px-4 py-2 ${column.width}`}>
+                  <td key={`cell-${column.key}-${item._id}`} className={`border px-4 py-2 ${column.width}`}>
                     {column.renderCell ? (
                       column.renderCell(
                         item,
@@ -89,22 +95,22 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, onToggle, onRemove
                             </button>
                           </>
                         ) : (
-                          <>
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                             <button
                               onClick={() => handleEdit(item)}
-                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline mr-2"
                               aria-label="Edit entry"
                             >
                               ✏️
                             </button>
-                            <button 
-                              onClick={() => onRemove(item)}
+                            <button
+                              onClick={() => onRemove(item._id)}
                               className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                               aria-label="Remove entry"
                             >
                               🗑️
                             </button>
-                          </>
+                          </div>
                         )}
                       </div>
                     ) : editingItem === item && column.editable ? (

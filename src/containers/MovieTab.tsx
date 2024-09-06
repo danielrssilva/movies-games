@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import DataTable, { Column } from "../components/DataTable";
 import MovieForm from "../components/MovieForm";
-import { useMovieContext } from "../contexts/MovieContext";
+import { useAddMovie, useDeleteMovie, useMovies, useUpdateMovie } from "../api/api";
 
 const MovieTab: React.FC = () => {
-  const { movies, addMovie, removeMovie, toggleWatched, editMovie } = useMovieContext();
+  const { data: movies = [], isLoading, error } = useMovies();
+  const { mutate: addMovie } = useAddMovie();
+  const { mutate: updateMovie } = useUpdateMovie();
+  const { mutate: deleteMovie } = useDeleteMovie();
   const [movieName, setMovieName] = useState("");
   const [person, setPerson] = useState("Danny");
 
@@ -18,8 +21,27 @@ const MovieTab: React.FC = () => {
   };
 
   const handleEdit = (movie: any, key: string, value: string) => {
-    editMovie(movie, { [key]: value });
+    updateMovie({ ...movie, [key]: value });
   };
+
+  
+  const groupAndOrderMovies = () => {
+    const order = ["Danny", "Hakush", "Thaai"];
+    const grouped = order.map(person => movies.filter(movie => movie.person === person));
+    const maxLength = Math.max(...grouped.map(group => group.length));
+    
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+      for (const group of grouped) {
+        if (group[i]) {
+          result.push(group[i]);
+        }
+      }
+    }
+    return result;
+  };
+
+  const orderedMovies = groupAndOrderMovies();
 
   const columns: Column[] = [
     {
@@ -35,7 +57,7 @@ const MovieTab: React.FC = () => {
             type="checkbox"
             className="mr-2 form-checkbox h-5 w-5 text-blue-600"
             checked={movie.watched}
-            onChange={() => toggleWatched(movie)}
+            onChange={() => updateMovie({...movie, watched: !movie.watched})}
           />
           {isEditing ? (
             <input
@@ -71,10 +93,10 @@ const MovieTab: React.FC = () => {
         onSubmit={handleSubmit}
       />
       <DataTable
-        data={movies}
+        isLoading={isLoading}
+        data={orderedMovies}
         columns={columns}
-        onToggle={toggleWatched}
-        onRemove={removeMovie}
+        onRemove={deleteMovie}
         onEdit={handleEdit}
       />
     </div>
