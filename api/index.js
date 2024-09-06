@@ -6,12 +6,14 @@ async function connectToDatabase() {
   if (cachedDb) {
     return cachedDb;
   }
-  const db = await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  cachedDb = db;
-  return db;
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI);
+    cachedDb = db;
+    return db;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw error;
+  }
 }
 
 module.exports = async (req, res) => {
@@ -19,7 +21,7 @@ module.exports = async (req, res) => {
     await connectToDatabase();
     res.status(200).json({ message: 'Connected to MongoDB successfully' });
   } catch (error) {
-    console.error('Database connection error:', error);
-    res.status(500).json({ error: 'Failed to connect to database', message: error.message });
+    console.error('Error in serverless function:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 };
