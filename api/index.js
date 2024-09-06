@@ -6,22 +6,18 @@ async function connectToDatabase() {
   if (cachedDb) {
     return cachedDb;
   }
-  try {
-    const db = await mongoose.connect(process.env.MONGODB_URI);
-    cachedDb = db;
-    return db;
-  } catch (error) {
-    console.error('Database connection error:', error);
-    throw error;
-  }
+  const db = await mongoose.connect(process.env.MONGODB_URI);
+  cachedDb = db;
+  return db;
 }
 
 module.exports = async (req, res) => {
   try {
-    await connectToDatabase();
-    res.status(200).json({ message: 'Connected to MongoDB successfully' });
+    const db = await connectToDatabase();
+    // Use db to perform operations
+    res.status(200).json({ message: 'Connected to database successfully' });
   } catch (error) {
-    console.error('Error in serverless function:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    console.error('Database connection error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
