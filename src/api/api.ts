@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 export const fetchMovies = () => axios.get(`${API_URL}/movies`);
 export const addMovie = (movie: any) => axios.post(`${API_URL}/movies`, movie);

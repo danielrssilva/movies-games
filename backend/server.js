@@ -14,9 +14,17 @@ async function connectToDatabase() {
   if (cachedDb) {
     return cachedDb;
   }
-  const db = await mongoose.connect(process.env.MONGODB_URI);
-  cachedDb = db;
-  return db;
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    cachedDb = db;
+    return db;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
 }
 
 const movieSchema = new mongoose.Schema({
@@ -35,9 +43,14 @@ const Game = mongoose.model('Game', gameSchema);
 
 // Movie routes
 app.get('/api/movies', async (req, res) => {
-  await connectToDatabase();
-  const movies = await Movie.find();
-  res.json(movies);
+  try {
+    await connectToDatabase();
+    const movies = await Movie.find();
+    res.json(movies);
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
 });
 
 app.post('/api/movies', async (req, res) => {
@@ -58,9 +71,14 @@ app.delete('/api/movies/:id', async (req, res) => {
 
 // Game routes
 app.get('/api/games', async (req, res) => {
-  await connectToDatabase();
-  const games = await Game.find();
-  res.json(games);
+  try {
+    await connectToDatabase();
+    const games = await Game.find();
+    res.json(games);
+  } catch (error) {
+    console.error('Error fetching games:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
 });
 
 app.post('/api/games', async (req, res) => {
@@ -79,6 +97,12 @@ app.delete('/api/games/:id', async (req, res) => {
   res.json({ message: 'Game deleted' });
 });
 
-// Remove the server listening code
-
-module.exports = app;
+module.exports = async (req, res) => {
+  try {
+    await connectToDatabase();
+    app(req, res);
+  } catch (error) {
+    console.error('Server Error:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
+};
