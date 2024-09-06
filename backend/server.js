@@ -8,9 +8,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB', err));
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
+  const db = await mongoose.connect(process.env.MONGODB_URI);
+  cachedDb = db;
+  return db;
+}
 
 const movieSchema = new mongoose.Schema({
   movieName: String,
@@ -28,6 +35,7 @@ const Game = mongoose.model('Game', gameSchema);
 
 // Movie routes
 app.get('/api/movies', async (req, res) => {
+  await connectToDatabase();
   const movies = await Movie.find();
   res.json(movies);
 });
@@ -50,6 +58,7 @@ app.delete('/api/movies/:id', async (req, res) => {
 
 // Game routes
 app.get('/api/games', async (req, res) => {
+  await connectToDatabase();
   const games = await Game.find();
   res.json(games);
 });
@@ -70,22 +79,9 @@ app.delete('/api/games/:id', async (req, res) => {
   res.json({ message: 'Game deleted' });
 });
 
-const PORT = process.env.PORT || 5000;
+// Remove the server listening code
 
-
-let server;
-
-if (!module.parent) {
-  server = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-
-  server.on('error', (e) => {
-    if (e.code === 'EADDRINUSE') {
-      console.log('Address already in use. Server might already be running.');
-      process.exit(1);
-    }
-  });
-}
-
-module.exports = app;
+module.exports = async (req, res) => {
+  await connectToDatabase();
+  app(req, res);
+};

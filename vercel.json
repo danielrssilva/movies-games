@@ -2,12 +2,18 @@
     "buildCommand": "npm run build",
     "outputDirectory": "build",
     "rewrites": [
-      { "source": "/api/(.*)", "destination": "/api/$1" },
-      { "source": "/(.*)", "destination": "/index.html" }
+        {
+            "source": "/api/(.*)",
+            "destination": "/backend/server.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
     ],
     "functions": {
-      "api/**/*.js": {
-        "runtime": "nodejs18"
-      }
+        "backend/server.js": {
+            "runtime": "@vercel/node@2.5.10"
+        }
     }
-  }
+}
