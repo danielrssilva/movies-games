@@ -4,16 +4,11 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/backend/server.js"
+            "destination": "/api"
         },
         {
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ],
-    "functions": {
-        "backend/server.js": {
-            "runtime": "@vercel/node@2.5.10"
-        }
-    }
+    ]
 }

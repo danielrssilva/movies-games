@@ -81,7 +81,4 @@ app.delete('/api/games/:id', async (req, res) => {
 
 // Remove the server listening code
 
-module.exports = async (req, res) => {
-  await connectToDatabase();
-  app(req, res);
-};
+module.exports = app;
