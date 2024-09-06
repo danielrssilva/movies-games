@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-const app = express();
+const router = express.Router();
 
-app.use(cors());
-app.use(express.json());
+router.use(cors());
+router.use(express.json());
 
 let cachedDb = null;
 
@@ -42,7 +42,7 @@ const Movie = mongoose.model('Movie', movieSchema);
 const Game = mongoose.model('Game', gameSchema);
 
 // Movie routes
-app.get('/api/movies', async (req, res) => {
+router.get('/api/movies', async (req, res) => {
   try {
     await connectToDatabase();
     const movies = await Movie.find();
@@ -53,24 +53,24 @@ app.get('/api/movies', async (req, res) => {
   }
 });
 
-app.post('/api/movies', async (req, res) => {
+router.post('/api/movies', async (req, res) => {
   const movie = new Movie(req.body);
   await movie.save();
   res.json(movie);
 });
 
-app.put('/api/movies/:id', async (req, res) => {
+router.put('/api/movies/:id', async (req, res) => {
   const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(movie);
 });
 
-app.delete('/api/movies/:id', async (req, res) => {
+router.delete('/api/movies/:id', async (req, res) => {
   await Movie.findByIdAndDelete(req.params.id);
   res.json({ message: 'Movie deleted' });
 });
 
 // Game routes
-app.get('/api/games', async (req, res) => {
+router.get('/api/games', async (req, res) => {
   try {
     await connectToDatabase();
     const games = await Game.find();
@@ -81,28 +81,20 @@ app.get('/api/games', async (req, res) => {
   }
 });
 
-app.post('/api/games', async (req, res) => {
+router.post('/api/games', async (req, res) => {
   const game = new Game(req.body);
   await game.save();
   res.json(game);
 });
 
-app.put('/api/games/:id', async (req, res) => {
+router.put('/api/games/:id', async (req, res) => {
   const game = await Game.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(game);
 });
 
-app.delete('/api/games/:id', async (req, res) => {
+router.delete('/api/games/:id', async (req, res) => {
   await Game.findByIdAndDelete(req.params.id);
   res.json({ message: 'Game deleted' });
 });
 
-module.exports = async (req, res) => {
-  try {
-    await connectToDatabase();
-    app(req, res);
-  } catch (error) {
-    console.error('Server Error:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: error.message });
-  }
-};
+module.exports = router;
