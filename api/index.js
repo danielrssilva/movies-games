@@ -1,20 +1,44 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 
-console.log('Starting serverless function');
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
+  const db = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  cachedDb = db;
+  return db;
+}
 
 app.get('/api/test', (req, res) => {
-  console.log('Test route accessed');
   res.json({ message: 'Test route is working' });
 });
 
-console.log('Importing main app');
-const mainApp = require('../backend/server');
+app.get('/api/db', async (req, res) => {
+  try {
+    await connectToDatabase();
+    res.json({ message: 'Database connected successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+});
 
-console.log('Using main app');
-app.use(mainApp);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
 
-module.exports = (req, res) => {
-  console.log('Serverless function invoked');
-  app(req, res);
+module.exports = async (req, res) => {
+  try {
+    app(req, res);
+  } catch (error) {
+    console.error('Unhandled error:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
 };
