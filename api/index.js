@@ -51,8 +51,6 @@ module.exports = async (req, res) => {
     const id = query.id;
 
     // Movie CRUD operations
-    if (req.url.startsWith('/api/movies')) {
-    if (req.url.startsWith('/movies' || req.url.startsWith('/api/movies'))) {
     if (req.url.startsWith('/api/movies') || req.url.startsWith('/movies')) {
       if (method === 'GET' && !id) {
         const movies = await Movie.find();
@@ -78,8 +76,6 @@ module.exports = async (req, res) => {
       }
     }
     // Game CRUD operations
-    else if (req.url.startsWith('/api/games')) {
-    else if (req.url.startsWith('/games' || req.url.startsWith('/api/games'))) {
     else if (req.url.startsWith('/api/games') || req.url.startsWith('/games')) {
       if (method === 'GET' && !id) {
         const games = await Game.find();
@@ -106,7 +102,6 @@ module.exports = async (req, res) => {
     }
     // Activities CRUD operations
     else if (req.url.startsWith('/activity') || req.url.startsWith('/api/activity')) {
-    else if (req.url.startsWith('/activity')) {
       if (method === 'GET' && !id) {
         const activities = await Activity.find().populate('activity');
         const filteredActivities = activities.filter(({ activity }) => activity !== null);
@@ -143,8 +138,6 @@ module.exports = async (req, res) => {
       }
     }
     // YearActivities CRUD operations
-    else if (req.url.startsWith('/yearActivities' || req.url.startsWith('/api/yearActivities'))) {
-    else if (req.url.startsWith('/yearActivities')) {
     else if (req.url.startsWith('/yearActivities') || req.url.startsWith('/api/yearActivities')) {
       if (method === 'POST') {
         const newYearActivities = new YearActivities(req.body);
@@ -174,5 +167,4 @@ module.exports = async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
-};};
 };
