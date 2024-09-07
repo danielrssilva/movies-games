@@ -53,6 +53,7 @@ module.exports = async (req, res) => {
     // Movie CRUD operations
     if (req.url.startsWith('/api/movies')) {
     if (req.url.startsWith('/movies' || req.url.startsWith('/api/movies'))) {
+    if (req.url.startsWith('/api/movies') || req.url.startsWith('/movies')) {
       if (method === 'GET' && !id) {
         const movies = await Movie.find();
         res.status(200).json(movies);
@@ -79,6 +80,7 @@ module.exports = async (req, res) => {
     // Game CRUD operations
     else if (req.url.startsWith('/api/games')) {
     else if (req.url.startsWith('/games' || req.url.startsWith('/api/games'))) {
+    else if (req.url.startsWith('/api/games') || req.url.startsWith('/games')) {
       if (method === 'GET' && !id) {
         const games = await Game.find();
         res.status(200).json(games);
@@ -143,6 +145,7 @@ module.exports = async (req, res) => {
     // YearActivities CRUD operations
     else if (req.url.startsWith('/yearActivities' || req.url.startsWith('/api/yearActivities'))) {
     else if (req.url.startsWith('/yearActivities')) {
+    else if (req.url.startsWith('/yearActivities') || req.url.startsWith('/api/yearActivities')) {
       if (method === 'POST') {
         const newYearActivities = new YearActivities(req.body);
         await newYearActivities.save();
