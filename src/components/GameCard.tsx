@@ -33,7 +33,7 @@ const GameCard: React.FC<GameCardProps> = (props) => {
 
                 }
             </button>
-            <h3 className="text-white text-lg font-black">{game.gameName}</h3>
+            <h3 className="text-white text-lg font-black w-full text-center line-clamp-2 px-8">{game.gameName}</h3>
         </div>
     );
 }
