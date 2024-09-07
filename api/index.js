@@ -104,6 +104,7 @@ module.exports = async (req, res) => {
     }
     // Activities CRUD operations
     else if (req.url.startsWith('/activity') || req.url.startsWith('/api/activity')) {
+    else if (req.url.startsWith('/activity')) {
       if (method === 'GET' && !id) {
         const activities = await Activity.find().populate('activity');
         const filteredActivities = activities.filter(({ activity }) => activity !== null);
@@ -141,6 +142,7 @@ module.exports = async (req, res) => {
     }
     // YearActivities CRUD operations
     else if (req.url.startsWith('/yearActivities' || req.url.startsWith('/api/yearActivities'))) {
+    else if (req.url.startsWith('/yearActivities')) {
       if (method === 'POST') {
         const newYearActivities = new YearActivities(req.body);
         await newYearActivities.save();
