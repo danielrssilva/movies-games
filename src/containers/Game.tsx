@@ -4,8 +4,8 @@ import { useAddGame, useDeleteGame, useGames, useUpdateGame } from "../api/api";
 import GameCard, { GameCardSkeleton } from "../components/GameCard";
 import { motion } from "framer-motion";
 
-const GameTab: React.FC = () => {
-  const { data: games = [], isLoading, error } = useGames();
+const Game: React.FC = () => {
+  const { data: games = [], isLoading } = useGames();
   const { mutate: addGame } = useAddGame();
   const { mutate: updateGame } = useUpdateGame();
   const { mutate: deleteGame } = useDeleteGame();
@@ -33,7 +33,7 @@ const GameTab: React.FC = () => {
       <h1
         className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
       >
-        Próximos jogos
+        Próximos jogos <span className="text-light-grey font-normal lowercase text-[24px]">{nextGames.length} jogos na lista</span>
       </h1>
       <div className="flex flex-wrap gap-10 mb-10 min-h-[124px]">
         {isLoading && (
@@ -52,7 +52,7 @@ const GameTab: React.FC = () => {
       <h1
         className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
       >
-        Jogos já finalizados
+        Jogos já finalizados <span className="text-light-grey font-normal lowercase text-[24px]">{playedGames.length} jogos finalizados</span>
       </h1>
       <div className="flex flex-wrap gap-10">
         {playedGames.map((game, index) =>
@@ -65,4 +65,4 @@ const GameTab: React.FC = () => {
   );
 }
 
-export default GameTab;
+export default Game;

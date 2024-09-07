@@ -1,7 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes, useLocation } from "react-router-dom";
-import MovieTab from "./containers/MovieTab";
-import GameTab from "./containers/GameTab";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Movie, Game, Calendar } from "./containers";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Navigation from "./components/Navigation";
 
@@ -15,9 +14,10 @@ const App: React.FC = () => {
         <div className="h-full bg-dark-grey p-10 font-montserrat overflow-auto box-border">
           <Navigation />
           <Routes>
-            <Route path="/movies" element={<MovieTab />} />
-            <Route path="/games" element={<GameTab />} />
-            <Route path="/" element={<MovieTab />} />
+            <Route path="/" element={<Movie />} />
+            <Route path="/movies" element={<Movie />} />
+            <Route path="/games" element={<Game />} />
+            <Route path="/calendar" element={<Calendar />} />
           </Routes>
         </div>
       </Router>

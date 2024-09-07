@@ -3,7 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 const Navigation = () => {
     const location = useLocation();
     const isMovies = location.pathname === '/movies' || location.pathname === '/';
-
+    const isGames = location.pathname === '/games';
+    const isCalendar = location.pathname === '/calendar';
+    
     return (
         <nav className="flex gap-6 mb-10 uppercase font-montserrat font-bold text-[64px]">
             <Link
@@ -15,15 +17,14 @@ const Navigation = () => {
             <span className="text-white mx-2">/</span>
             <Link
                 to="/games"
-                className={`hover:text-white transition-colors duration-300 ${isMovies ? 'text-light-grey' : 'text-white'}`}
+                className={`hover:text-white transition-colors duration-300 ${isGames ? 'text-white' : 'text-light-grey'}`}
             >
                 Jogos
             </Link>
             <span className="text-white mx-2">/</span>
             <Link
-                to={location.pathname}
-                className="text-darkest-grey cursor-default"
-                aria-disabled
+                to="/calendar"
+                className={`hover:text-white transition-colors duration-300 ${isCalendar ? 'text-white' : 'text-light-grey'}`}
             >
                 Calendário
             </Link>

@@ -4,8 +4,8 @@ import { useAddMovie, useDeleteMovie, useGetMovieInfo, useMovies, useUpdateMovie
 import MovieCard, { MovieCardSkeleton } from "../components/MovieCard";
 import { motion } from "framer-motion";
 
-const MovieTab: React.FC = () => {
-  const { data: movies = [], isLoading, error } = useMovies();
+const Movie: React.FC = () => {
+  const { data: movies = [], isLoading } = useMovies();
   const { mutate: addMovie } = useAddMovie();
   const { mutate: updateMovie } = useUpdateMovie();
   const { mutate: deleteMovie } = useDeleteMovie();
@@ -37,7 +37,7 @@ const MovieTab: React.FC = () => {
     if (movie) {
       getMovieInfo(movie.Title);
     }
-  }, [movie]);
+  }, [movie, getMovieInfo]);
 
   useEffect(() => {
     if (movieInfo) {
@@ -76,7 +76,7 @@ const MovieTab: React.FC = () => {
       <h1
         className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
       >
-        Próximos filmes
+        Próximos filmes <span className="text-light-grey font-normal lowercase text-[24px]">{orderedMovies.length} filmes na lista</span>
       </h1>
       <div className="flex flex-wrap gap-10 mb-10 min-h-[400px]">
         {!isLoading && orderedMovies.length === 0 && (
@@ -100,7 +100,7 @@ const MovieTab: React.FC = () => {
       <h1
         className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
       >
-        Assistidos
+        Assistidos <span className="text-light-grey font-normal lowercase text-[24px]">{watchedMovies.length} filmes assistidos</span>
       </h1>
       <div className="flex flex-wrap gap-10">
         {watchedMovies.map((movie, index) => (
@@ -113,4 +113,4 @@ const MovieTab: React.FC = () => {
   );
 }
 
-export default MovieTab;
+export default Movie;

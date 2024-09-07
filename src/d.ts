@@ -32,3 +32,31 @@ interface Game {
     gameName: string;
     played: boolean;
 }
+
+// Calendar
+interface Day {
+    day: number;
+    month: number;
+    year: number;
+    activity: Activity | null;
+}
+
+interface YearActivities {
+    activities: Activity[];
+}
+
+interface Activity {
+    _id: string;
+    date: Date;
+    activity: Game | Movie;
+}
+
+interface ActivityUpdate extends Activity {
+    activityType: "Game" | "Movie";
+}
+
+interface ActivityBody {
+    _id: string;
+    date: Date;
+    activityModel: Game | Movie;
+}

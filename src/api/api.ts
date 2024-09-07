@@ -14,6 +14,17 @@ const addGame = (game: Omit<Game, '_id'>): Promise<Game> => axios.post(`${API_UR
 const updateGame = (game: Partial<Game>): Promise<Game> => axios.put(`${API_URL}/games?id=${game._id}`, game).then(res => res.data);
 const deleteGame = (id: string): Promise<void> => axios.delete(`${API_URL}/games?id=${id}`).then(res => res.data);
 
+const fetchActivities = (): Promise<Activity[]> => axios.get(`${API_URL}/activity`).then(res => {
+  return res.data.map((activity: Activity) => ({
+    ...activity,
+    date: new Date(activity.date)
+  }));
+});
+const addActivity = (activity: Omit<ActivityBody, '_id'>): Promise<Activity> => axios.post(`${API_URL}/activity`, activity).then(res => res.data);
+const updateActivity = (activity: ActivityUpdate): Promise<Activity> => axios.put(`${API_URL}/activity?id=${activity._id}`, activity).then(res => res.data);
+const deleteActivity = (id: string): Promise<void> => axios.delete(`${API_URL}/activity?id=${id}`).then(res => res.data);
+const fetchYearActivities = (): Promise<YearActivities> => axios.get(`${API_URL}/yearActivities`).then(res => res.data);
+
 // Custom hooks
 export const useMovies = () => useQuery<Movie[], Error>({ queryKey: ['movies'], queryFn: fetchMovies });
 
@@ -75,6 +86,7 @@ export const useDeleteGame = () => {
     mutationFn: deleteGame,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
   });
 };
@@ -106,3 +118,40 @@ export const useGetMovieInfo = () => {
   });
 };
 
+export const useGetActivities = () => {
+  return useQuery<Activity[], Error>({ queryKey: ['activities'], queryFn: fetchActivities });
+};
+
+export const useAddActivity = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Activity, Error, Omit<ActivityBody, '_id'>>({
+    mutationFn: addActivity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
+    },
+  });
+};
+
+export const useUpdateActivity = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Activity, Error, ActivityUpdate>({
+    mutationFn: updateActivity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
+    },
+  });
+};
+
+export const useDeleteActivity = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: deleteActivity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
+    },
+  });
+};
+
+export const useGetYearActivities = () => {
+  return useQuery<YearActivities, Error>({ queryKey: ['yearActivities'], queryFn: fetchYearActivities });
+};
