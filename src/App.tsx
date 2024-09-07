@@ -1,30 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Routes, useLocation } from "react-router-dom";
 import MovieTab from "./containers/MovieTab";
 import GameTab from "./containers/GameTab";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Navigation from "./components/Navigation";
 
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <div className="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-          <nav className="flex mb-4">
-            <Link
-              to="/movies"
-              className="mr-2 px-4 py-2 rounded-t-lg bg-blue-500 text-white hover:bg-blue-600"
-            >
-              Movies
-            </Link>
-            <Link
-              to="/games"
-              className="px-4 py-2 rounded-t-lg bg-blue-500 text-white hover:bg-blue-600"
-            >
-              Games
-            </Link>
-          </nav>
+        <div className="h-full bg-dark-grey p-10 font-montserrat overflow-auto box-border">
+          <Navigation />
           <Routes>
             <Route path="/movies" element={<MovieTab />} />
             <Route path="/games" element={<GameTab />} />

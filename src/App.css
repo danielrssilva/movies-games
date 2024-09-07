@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Monomaniac+One&display=swap');
+
+html, body, #root {
+  height: 100%;
+}
 
 body {
   background-color: #f8f9fa;

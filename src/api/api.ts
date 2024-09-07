@@ -3,19 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-interface Movie {
-  _id: string;
-  movieName: string;
-  person: string;
-  watched: boolean;
-}
-
-interface Game {
-  _id: string;
-  gameName: string;
-  played: boolean;
-}
-
 // API call functions
 const fetchMovies = (): Promise<Movie[]> => axios.get(`${API_URL}/movies`).then(res => res.data);
 const addMovie = (movie: Omit<Movie, '_id'>): Promise<Movie> => axios.post(`${API_URL}/movies`, movie).then(res => res.data);
@@ -91,3 +78,31 @@ export const useDeleteGame = () => {
     },
   });
 };
+
+export const useSearchMovies = (onSuccess: () => void) => {
+  const apiKey = process.env.REACT_APP_OMDB_API_KEY;
+  return useMutation<MovieSearchResult, Error, string>({
+    mutationFn: async (searchTerm: string) => {
+      const response = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(searchTerm)}&type=movie`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
+    onSuccess,
+  });
+};
+
+export const useGetMovieInfo = () => {
+  const apiKey = process.env.REACT_APP_OMDB_API_KEY;
+  return useMutation<MovieInfo, Error, string>({
+    mutationFn: async (movieName: string) => {
+      const response = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&t=${movieName}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
+  });
+};
+

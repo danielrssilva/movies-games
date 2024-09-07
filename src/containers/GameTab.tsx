@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import DataTable, { Column } from "../components/DataTable";
 import GameForm from "../components/GameForm";
 import { useAddGame, useDeleteGame, useGames, useUpdateGame } from "../api/api";
+import GameCard from "../components/GameCard";
 
 const GameTab: React.FC = () => {
   const { data: games = [], isLoading, error } = useGames();
@@ -19,63 +19,36 @@ const GameTab: React.FC = () => {
     }
   };
 
-  const handleEdit = (game: any, key: string, value: string) => {
-    updateGame({ ...game, [key]: value });
-  };
-
-  const columns: Column[] = [
-    {
-      key: 'game',
-      dataKey: 'gameName',
-      width: 'w-4/5',
-      header: 'Game',
-      truncate: true,
-      editable: true,
-      renderCell: (game, isEditing, onChange, onSubmit) => (
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            className="mr-2 form-checkbox h-5 w-5 text-blue-600"
-            checked={game.played}
-            onChange={() => updateGame({...game, played: !game.played})}
-          />
-          {isEditing ? (
-            <input
-              type="text"
-              defaultValue={game.gameName}
-              onChange={(e) => onChange(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  onSubmit();
-                }
-              }}
-              className="w-full px-2 py-1 border rounded"
-              autoFocus
-            />
-          ) : (
-            <span className="truncate">{game.gameName}</span>
-          )}
-        </div>
-      )
-    },
-    { key: 'actions', dataKey: 'actions', width: 'w-1/5' }
-  ];
+  const playedGames = games.filter((game) => game.played);
+  const nextGames = games.filter((game) => !game.played);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6 text-blue-600">Game Database</h1>
+    <div className="relative">
       <GameForm
         gameName={gameName}
         onGameNameChange={(e: React.ChangeEvent<HTMLInputElement>) => setGameName(e.target.value)}
         onSubmit={handleSubmit}
       />
-      <DataTable
-        data={games}
-        columns={columns}
-        onRemove={deleteGame}
-        onEdit={handleEdit}
-        isLoading={isLoading}
-      />
+      <h1
+        className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
+      >
+        Próximos jogos
+      </h1>
+      <div className="flex flex-wrap gap-10 mb-10 min-h-[124px]">
+        {nextGames.map((game) => {
+          return <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
+        })}
+      </div>
+      <h1
+        className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
+      >
+        Jogos já finalizados
+      </h1>
+      <div className="flex flex-wrap gap-10">
+        {playedGames.map((game) => {
+          return <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
+        })}
+      </div>
     </div>
   );
 }
