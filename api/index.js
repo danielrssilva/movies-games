@@ -46,11 +46,13 @@ async function connectToDatabase() {
 module.exports = async (req, res) => {
   try {
     await connectToDatabase();
+
     const { method, query } = req;
     const id = query.id;
 
     // Movie CRUD operations
     if (req.url.startsWith('/api/movies')) {
+    if (req.url.startsWith('/movies' || req.url.startsWith('/api/movies'))) {
       if (method === 'GET' && !id) {
         const movies = await Movie.find();
         res.status(200).json(movies);
@@ -70,10 +72,13 @@ module.exports = async (req, res) => {
         const deletedMovie = await Movie.findByIdAndDelete(id);
         if (!deletedMovie) return res.status(404).json({ message: 'Movie not found' });
         res.status(200).json({ message: 'Movie deleted successfully' });
+      } else {
+        res.status(400).json({ message: 'Invalid request' });
       }
     }
     // Game CRUD operations
     else if (req.url.startsWith('/api/games')) {
+    else if (req.url.startsWith('/games' || req.url.startsWith('/api/games'))) {
       if (method === 'GET' && !id) {
         const games = await Game.find();
         res.status(200).json(games);
@@ -165,3 +170,4 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 };};
+};
