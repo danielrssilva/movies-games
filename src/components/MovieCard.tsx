@@ -33,8 +33,8 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
             <span className='z-10 absolute -right-8 bottom-8 rounded-full opacity-0 transition-all duration-300 group-hover:opacity-100'>
                 <img src={`/images/${movie.person}.png`} alt={movie.person} />
             </span>
-            <div className="flex flex-col absolute bottom-8 items-center">
-                <h3 className="text-white text-lg font-black">{movie.movieName}</h3>
+            <div className="flex flex-col absolute bottom-8 items-center max-w-48">
+                <h3 className="text-white text-lg font-black text-center">{movie.movieName}</h3>
                 <p className="text-lightest-grey text-sm">{`(${movie.year})`}</p>
             </div>
         </div>
