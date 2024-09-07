@@ -38,4 +38,12 @@ const GameCard: React.FC<GameCardProps> = (props) => {
     );
 }
 
+export const GameCardSkeleton = () => {
+    return (
+        <div className="flex flex-col gap-2 relative flex items-center justify-center font-montserrat w-[264px] h-[124px] bg-darkest-grey rounded-lg animate-pulse">
+            <span className="absolute -top-4 bg-light-grey h-8 rounded-full w-20" />
+        </div>
+    );
+}
+
 export default GameCard;

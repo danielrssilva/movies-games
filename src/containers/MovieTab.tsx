@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import MovieForm from "../components/MovieForm";
 import { useAddMovie, useDeleteMovie, useGetMovieInfo, useMovies, useUpdateMovie } from "../api/api";
-import MovieCard from "../components/MovieCard";
+import MovieCard, { MovieCardSkeleton } from "../components/MovieCard";
+import { motion } from "framer-motion";
 
 const MovieTab: React.FC = () => {
   const { data: movies = [], isLoading, error } = useMovies();
@@ -84,12 +85,16 @@ const MovieTab: React.FC = () => {
           </div>
         )}
         {isLoading && (
-          <div className="flex items-center justify-center w-full h-full text-white font-montserrat text-[24px]">
-            Carregando filmes...
-          </div>
+          <>
+            <MovieCardSkeleton />
+            <MovieCardSkeleton />
+            <MovieCardSkeleton />
+          </>
         )}
-        {orderedMovies.map((movie) => (
-          <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
+        {orderedMovies.map((movie, index) => (
+          <motion.div key={movie._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * index, duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }} exit={{ opacity: 0, translateY: 15 }}>
+            <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
+          </motion.div>
         ))}
       </div>
       <h1
@@ -98,8 +103,10 @@ const MovieTab: React.FC = () => {
         Assistidos
       </h1>
       <div className="flex flex-wrap gap-10">
-        {watchedMovies.map((movie) => (
-          <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
+        {watchedMovies.map((movie, index) => (
+          <motion.div key={movie._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * (index + orderedMovies.length), duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }}>
+            <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
+          </motion.div>
         ))}
       </div>
     </div>

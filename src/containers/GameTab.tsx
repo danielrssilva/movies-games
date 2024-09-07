@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import GameForm from "../components/GameForm";
 import { useAddGame, useDeleteGame, useGames, useUpdateGame } from "../api/api";
-import GameCard from "../components/GameCard";
+import GameCard, { GameCardSkeleton } from "../components/GameCard";
+import { motion } from "framer-motion";
 
 const GameTab: React.FC = () => {
   const { data: games = [], isLoading, error } = useGames();
@@ -35,9 +36,18 @@ const GameTab: React.FC = () => {
         Próximos jogos
       </h1>
       <div className="flex flex-wrap gap-10 mb-10 min-h-[124px]">
-        {nextGames.map((game) => {
-          return <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
-        })}
+        {isLoading && (
+          <>
+            <GameCardSkeleton />
+            <GameCardSkeleton />
+            <GameCardSkeleton />
+          </>
+        ) }
+        {nextGames.map((game, index) => (
+          <motion.div key={game._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * index, duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }} exit={{ opacity: 0, translateY: 15 }}>
+            <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
+          </motion.div>
+        ))}
       </div>
       <h1
         className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
@@ -45,9 +55,11 @@ const GameTab: React.FC = () => {
         Jogos já finalizados
       </h1>
       <div className="flex flex-wrap gap-10">
-        {playedGames.map((game) => {
-          return <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
-        })}
+        {playedGames.map((game, index) =>
+          <motion.div key={game._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * index, duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }} exit={{ opacity: 0, translateY: 15 }}>
+            <GameCard key={game._id} game={game} onRemove={deleteGame} onUpdate={updateGame} />
+          </motion.div>
+        )}
       </div>
     </div>
   );
