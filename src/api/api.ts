@@ -83,7 +83,7 @@ export const useSearchMovies = (onSuccess: () => void) => {
   const apiKey = process.env.REACT_APP_OMDB_API_KEY;
   return useMutation<MovieSearchResult, Error, string>({
     mutationFn: async (searchTerm: string) => {
-      const response = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(searchTerm)}&type=movie`);
+      const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(searchTerm)}&type=movie`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -97,7 +97,7 @@ export const useGetMovieInfo = () => {
   const apiKey = process.env.REACT_APP_OMDB_API_KEY;
   return useMutation<MovieInfo, Error, string>({
     mutationFn: async (movieName: string) => {
-      const response = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&t=${movieName}`);
+      const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&t=${movieName}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
