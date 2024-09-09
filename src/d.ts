@@ -6,6 +6,11 @@ interface Movie {
     rating: string;
     year: string;
     movieName: string;
+    ratings: {
+        hakush: number;
+        thaai: number;
+        danny: number;
+    }
 }
 
 interface MovieInfo {

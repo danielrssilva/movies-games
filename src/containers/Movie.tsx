@@ -25,6 +25,11 @@ const Movie: React.FC = () => {
         year: movieData.Year,
         movieName: movieData.Title,
         poster: movieData.Poster,
+        ratings: {
+          hakush: 0,
+          thaai: 0,
+          danny: 0
+        }
       }
       addMovie(newMovie);
       setMovieData(null);
@@ -47,7 +52,7 @@ const Movie: React.FC = () => {
 
   const groupAndOrderMovies = () => {
     const order = ["Danny", "Hakush", "Thaai"];
-    const grouped = order.map(person => movies.filter(movie => movie.person === person && movie.watched === false));
+    const grouped = order.map(person => movies.filter(movie => movie.person === person && !movie.watched));
     const maxLength = Math.max(...grouped.map(group => group.length));
 
     const result = [];

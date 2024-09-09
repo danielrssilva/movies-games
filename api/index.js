@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const movieSchema = new mongoose.Schema({
   movieName: String,
@@ -7,7 +8,12 @@ const movieSchema = new mongoose.Schema({
   poster: String,
   rating: Number,
   year: Number,
-  movieName: String
+  movieName: String,
+  ratings: {
+    hakush: Number,
+    thaai: Number,
+    danny: Number
+  }
 });
 
 const gameSchema = new mongoose.Schema({
