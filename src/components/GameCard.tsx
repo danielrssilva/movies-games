@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { GameCrossedIcon, GameIcon, RemoveIcon } from "./icons";
+import { LetterAnimation } from "../helpers/animations";
 
 interface GameCardProps {
   game: Game;
@@ -56,11 +57,6 @@ export const GameCardSkeleton = () => {
       <span className="absolute -top-4 bg-light-grey h-8 rounded-full w-20" />
     </div>
   );
-};
-
-const LetterAnimation = {
-  hidden: { opacity: 0, transform: "translateY(30px)", scale: 0.8 },
-  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
 };
 
 export default GameCard;

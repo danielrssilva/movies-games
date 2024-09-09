@@ -10,6 +10,8 @@ import { useGames, useGetActivities, useMovies } from "../api/api";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { AnimatePresence, motion } from "framer-motion";
+import Year from "../components/calendar/Year";
+import { dayAnimation } from "../helpers/animations";
 
 const Calendar: React.FC = () => {
   const [thisYearMondays, setThisYearMondays] = useState<Date[]>([]);
@@ -65,7 +67,7 @@ const Calendar: React.FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="h-full w-full">
+      <div className="max-h-full w-full">
         <section className="flex flex-col gap-8">
           <div className="flex flex-col">
             <h3 className="text-white text-[24px] font-bold">
@@ -77,90 +79,7 @@ const Calendar: React.FC = () => {
               )}
             </h3>
             <div className="w-auto grid grid-flow-col gap-8 overflow-x-auto py-5 pr-5">
-              <motion.div
-                variants={dayAnimation}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                <Month
-                  date={thisYearMondays[0]}
-                  activityCount={0}
-                  weeksCount={0}
-                />
-              </motion.div>
-              {thisYearMondays?.map((monday, index) => {
-                if (
-                  index !== 0 &&
-                  monday.getMonth() !== thisYearMondays[index - 1]?.getMonth()
-                ) {
-                  return (
-                    <AnimatePresence
-                      key={`month-${monday.getMonth()}-${monday.getFullYear()}`}
-                    >
-                      <motion.div
-                        key={`month-${monday.getMonth()}-${monday.getFullYear()}`}
-                        variants={dayAnimation}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                      >
-                        <Month date={monday} activityCount={0} weeksCount={0} />
-                      </motion.div>
-                      <motion.div
-                        key={`day-${monday.getDate()}-${monday.getMonth()}-${monday.getFullYear()}`}
-                        variants={dayAnimation}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.5 }}
-                      >
-                        <Day
-                          activity={
-                            activities.find(
-                              (activity) =>
-                                activity.date.getDate() === monday.getDate() &&
-                                activity.date.getMonth() ===
-                                  monday.getMonth() &&
-                                activity.date.getFullYear() ===
-                                  monday.getFullYear()
-                            ) || null
-                          }
-                          key={index}
-                          day={monday.getDate()}
-                          month={monday.getMonth() + 1}
-                          year={monday.getFullYear()}
-                        />
-                      </motion.div>
-                    </AnimatePresence>
-                  );
-                } else {
-                  return (
-                    <motion.div
-                      key={`day-${monday.getDate()}-${monday.getMonth()}-${monday.getFullYear()}`}
-                      variants={dayAnimation}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true, amount: 0.5 }}
-                    >
-                      <Day
-                        activity={
-                          activities.find(
-                            (activity) =>
-                              activity.date.getDate() === monday.getDate() &&
-                              activity.date.getMonth() === monday.getMonth() &&
-                              activity.date.getFullYear() ===
-                                monday.getFullYear()
-                          ) || null
-                        }
-                        key={index}
-                        day={monday.getDate()}
-                        month={monday.getMonth() + 1}
-                        year={monday.getFullYear()}
-                      />
-                    </motion.div>
-                  );
-                }
-              })}
+              <Year mondays={thisYearMondays} activities={activities} />
             </div>
           </div>
           <div className="flex flex-col">
@@ -173,90 +92,7 @@ const Calendar: React.FC = () => {
               )}
             </h3>
             <div className="w-auto grid grid-flow-col gap-8 overflow-x-auto py-5 pr-5">
-              <motion.div
-                variants={dayAnimation}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                <Month
-                  date={nextYearMondays[0]}
-                  activityCount={0}
-                  weeksCount={0}
-                />
-              </motion.div>
-              {nextYearMondays?.map((monday, index) => {
-                if (
-                  index !== 0 &&
-                  monday.getMonth() !== nextYearMondays[index - 1]?.getMonth()
-                ) {
-                  return (
-                    <AnimatePresence
-                      key={`next-month-${monday.getMonth()}-${monday.getFullYear()}`}
-                    >
-                      <motion.div
-                        key={`next-month-${monday.getMonth()}-${monday.getFullYear()}`}
-                        variants={dayAnimation}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.5 }}
-                      >
-                        <Month date={monday} activityCount={0} weeksCount={0} />
-                      </motion.div>
-                      <motion.div
-                        key={`next-day-${monday.getDate()}-${monday.getMonth()}-${monday.getFullYear()}`}
-                        variants={dayAnimation}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.5 }}
-                      >
-                        <Day
-                          activity={
-                            activities.find(
-                              (activity) =>
-                                activity.date.getDate() === monday.getDate() &&
-                                activity.date.getMonth() ===
-                                  monday.getMonth() &&
-                                activity.date.getFullYear() ===
-                                  monday.getFullYear()
-                            ) || null
-                          }
-                          key={index}
-                          day={monday.getDate()}
-                          month={monday.getMonth() + 1}
-                          year={monday.getFullYear()}
-                        />
-                      </motion.div>
-                    </AnimatePresence>
-                  );
-                } else {
-                  return (
-                    <motion.div
-                      key={`next-day-${monday.getDate()}-${monday.getMonth()}-${monday.getFullYear()}`}
-                      variants={dayAnimation}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true, amount: 0.5 }}
-                    >
-                      <Day
-                        activity={
-                          activities.find(
-                            (activity) =>
-                              activity.date.getDate() === monday.getDate() &&
-                              activity.date.getMonth() === monday.getMonth() &&
-                              activity.date.getFullYear() ===
-                                monday.getFullYear()
-                          ) || null
-                        }
-                        key={index}
-                        day={monday.getDate()}
-                        month={monday.getMonth() + 1}
-                        year={monday.getFullYear()}
-                      />
-                    </motion.div>
-                  );
-                }
-              })}
+              <Year mondays={nextYearMondays} activities={activities} />
             </div>
           </div>
         </section>
@@ -266,7 +102,9 @@ const Calendar: React.FC = () => {
               Filmes
               {filteredMovies.length > 0 && (
                 <span className="text-lightest-grey text-xl font-thin ml-4">
-                  {`${filteredMovies.length} ${filteredMovies.length === 1 ? "filme" : "filmes"}`}
+                  {`${filteredMovies.length} ${
+                    filteredMovies.length === 1 ? "filme" : "filmes"
+                  }`}
                 </span>
               )}
             </h1>
@@ -298,7 +136,9 @@ const Calendar: React.FC = () => {
             <h1 className="uppercase font-montserrat font-bold text-[64px] text-white text-right">
               {filteredGames.length > 0 && (
                 <span className="text-lightest-grey text-xl font-thin mr-4">
-                  {`${filteredGames.length} ${filteredGames.length === 1 ? "jogo" : "jogos"}`}
+                  {`${filteredGames.length} ${
+                    filteredGames.length === 1 ? "jogo" : "jogos"
+                  }`}
                 </span>
               )}
               Jogos
@@ -331,12 +171,6 @@ const Calendar: React.FC = () => {
       </div>
     </DndProvider>
   );
-};
-
-const dayAnimation = {
-  hidden: { opacity: 0, translateX: -10, scale: 0.9 },
-  visible: { opacity: 1, translateX: 0, scale: 1 },
-  exit: { opacity: 0, scale: 0.5 },
 };
 
 export default Calendar;

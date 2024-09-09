@@ -9,6 +9,7 @@ import {
   useUpdateGame,
   useUpdateMovie,
 } from "../../api/api";
+import { IconAnimation, LetterAnimation } from "../../helpers/animations";
 
 const Day: React.FC<Day> = ({ day, month, year, activity }) => {
   const [game, setGame] = useState<Game>();
@@ -106,7 +107,7 @@ const Day: React.FC<Day> = ({ day, month, year, activity }) => {
           animate="visible"
           className="bg-white text-grey font-bold px-2 py-1 rounded-full w-32 flex justify-center items-center"
         >
-          {day}/{month}
+          {`${day < 10 ? `0${day}` : day}/${month < 10 ? `0${month}` : month}`}
         </motion.span>
         <motion.span
           variants={IconAnimation}
@@ -234,21 +235,6 @@ const Day: React.FC<Day> = ({ day, month, year, activity }) => {
       )}
     </div>
   );
-};
-
-const IconAnimation = {
-  hidden: { opacity: 0, scale: 0, display: "none" },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.2 },
-    display: "flex",
-  },
-};
-
-const LetterAnimation = {
-  hidden: { opacity: 0, transform: "translateY(20px)", scale: 0.8 },
-  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
 };
 
 export default Day;

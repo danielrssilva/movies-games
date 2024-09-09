@@ -1,6 +1,6 @@
 import React from "react";
-import { RemoveIcon, Star } from "./icons";
-import { AnimatePresence, motion } from "framer-motion";
+import { RemoveIcon } from "./icons";
+import { AnimatePresence } from "framer-motion";
 import StarButton from "./StarButton";
 
 interface MovieCardProps {
@@ -29,7 +29,7 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
         <div className="absolute transition-all duration-300 flex opacity-0 group-hover:opacity-100 items-center justify-center top-0 left-0 w-full h-full bg-darkest-grey rounded-lg">
           <div className="w-full flex flex-col gap-8 mb-12 items-center">
             <div className="group-hover:flex hidden w-full justify-center items-center gap-4">
-              <img src={`/images/Danny.png`} className="w-8" />
+              <img src={`/images/Danny.png`} className="w-8" alt="Danny" />
               <div className="flex gap-2">
                 <AnimatePresence>
                   {ratings.map((_, index) => (
@@ -45,7 +45,7 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
               </div>
             </div>
             <div className="group-hover:flex hidden items-center gap-4">
-              <img src={`/images/Hakush.png`} className="w-8" />
+              <img src={`/images/Hakush.png`} className="w-8" alt="Hakush" />
               <div className="flex gap-2">
                 <AnimatePresence>
                   {ratings.map((_, index) => (
@@ -61,7 +61,7 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
               </div>
             </div>
             <div className="group-hover:flex hidden items-center gap-4">
-              <img src={`/images/Thaai.png`} className="w-8" />
+              <img src={`/images/Thaai.png`} className="w-8" alt="Thaai" />
               <div className="flex gap-2">
                 <AnimatePresence>
                   {ratings.map((_, index) => (
@@ -155,43 +155,6 @@ export const MovieCardSkeleton = () => {
       </div>
     </div>
   );
-};
-
-interface AnimatedStarProps {
-  className?: string;
-  index: number;
-  person: string;
-  rating: number;
-  onClick: (person: string, rating: number) => void;
-}
-
-const AnimatedStar = (props: AnimatedStarProps) => {
-  const { className, index, person, rating, onClick } = props;
-  return (
-    <AnimatePresence key={`${person}-rating-${index}`}>
-      <motion.button
-        onClick={() => onClick(person, index + 1)}
-        className="group/star"
-        whileInView="visible"
-        transition={{ duration: 0.2, delay: index * 0.1 }}
-        variants={StarAnimation}
-        initial="hidden"
-        exit="hidden"
-        viewport={{ once: false }}
-      >
-        <Star
-          className={`transition-all duration-75 group-hover/star:stroke-white ${className} ${
-            rating > index ? "stroke-white" : "stroke-dark-grey-icon"
-          }`}
-        />
-      </motion.button>
-    </AnimatePresence>
-  );
-};
-
-const StarAnimation = {
-  hidden: { opacity: 0, transform: "translateY(-10px)", scale: 0.8 },
-  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
 };
 
 export default MovieCard;

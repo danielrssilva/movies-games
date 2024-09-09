@@ -1,5 +1,6 @@
 import { useDrag } from "react-dnd";
 import { AnimatePresence, motion } from "framer-motion";
+import { LetterAnimation } from "../../helpers/animations";
 
 interface MovieDraggableProps {
   movie: Movie;
@@ -27,6 +28,7 @@ const MovieDraggable: React.FC<MovieDraggableProps> = ({ movie }) => {
         <img
           src={`images/${movie.person}.png`}
           className="w-11 h-11 rounded-lg"
+          alt={movie.person}
         />
       </span>
       <span className="absolute -top-2">
@@ -61,11 +63,6 @@ const MovieDraggable: React.FC<MovieDraggableProps> = ({ movie }) => {
       </h3>
     </div>
   );
-};
-
-const LetterAnimation = {
-  hidden: { opacity: 0, transform: "translateY(20px)", scale: 0.8 },
-  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
 };
 
 export default MovieDraggable;

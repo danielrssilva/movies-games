@@ -1,5 +1,6 @@
 import { useDrag } from "react-dnd";
 import { AnimatePresence, motion } from "framer-motion";
+import { LetterAnimation } from "../../helpers/animations";
 
 interface GameDraggableProps {
   game: Game;
@@ -57,11 +58,6 @@ const GameDraggable: React.FC<GameDraggableProps> = ({ game }) => {
       </h3>
     </div>
   );
-};
-
-const LetterAnimation = {
-  hidden: { opacity: 0, transform: "translateY(20px)", scale: 0.8 },
-  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
 };
 
 export default GameDraggable;

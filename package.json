@@ -1,6 +1,6 @@
 {
   "name": "otarrios-movies-games",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@tanstack/react-query": "^5.55.0",
