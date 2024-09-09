@@ -1,49 +1,66 @@
-import React from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
+import { GameCrossedIcon, GameIcon, RemoveIcon } from "./icons";
 
 interface GameCardProps {
-    game: Game;
-    onRemove: (id: string) => void;
-    onUpdate: (game: Game) => void;
+  game: Game;
+  onRemove: (id: string) => void;
+  onUpdate: (game: Game) => void;
 }
 
 const GameCard: React.FC<GameCardProps> = (props) => {
-    const { game, onRemove, onUpdate } = props;
-    return (
-        <div className="flex flex-col gap-2 relative flex items-center justify-center font-montserrat w-[264px] h-[124px] bg-darkest-grey rounded-lg group">
-            <button onClick={() => onRemove(game._id)} className='group/delete z-10 absolute -right-4 -top-4 bg-darkest-grey rounded-full p-2 hover:bg-red-900 transition-all duration-300 opacity-0 group-hover:opacity-100'>
-                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.7164 2.75139L10.9989 5.46966L8.2814 2.75139C8.04342 2.51318 7.76084 2.32422 7.44983 2.19528C7.13881 2.06636 6.80544 2 6.46876 2C6.1321 2 5.79872 2.06636 5.4877 2.19528C5.17669 2.32422 4.89411 2.51318 4.65613 2.75139L3.75266 3.65724C3.5141 3.89505 3.3248 4.17763 3.19564 4.48876C3.06649 4.7999 3 5.13348 3 5.47037C3 5.80727 3.06649 6.14085 3.19564 6.45199C3.3248 6.76312 3.5141 7.0457 3.75266 7.28351L6.47019 10.0004L3.75266 12.718C3.5141 12.9557 3.3248 13.2383 3.19564 13.5494C3.06649 13.8606 3 14.1941 3 14.5311C3 14.868 3.06649 15.2015 3.19564 15.5127C3.3248 15.8238 3.5141 16.1064 3.75266 16.3442L4.65827 17.2487C4.89625 17.4868 5.17882 17.6758 5.48984 17.8048C5.80086 17.9337 6.13423 18 6.4709 18C6.80757 18 7.14094 17.9337 7.45196 17.8048C7.76298 17.6758 8.04555 17.4868 8.28353 17.2487L10.9989 14.5304L13.7164 17.2487C13.9544 17.4868 14.237 17.6758 14.548 17.8048C14.859 17.9337 15.1924 18 15.5291 18C15.8658 18 16.1991 17.9337 16.5102 17.8048C16.8211 17.6758 17.1037 17.4868 17.3417 17.2487L18.2473 16.3428C18.4859 16.105 18.6751 15.8224 18.8043 15.5112C18.9335 15.2001 19 14.8666 19 14.5297C19 14.1927 18.9335 13.8592 18.8043 13.548C18.6751 13.2369 18.4859 12.9543 18.2473 12.7165L15.5283 10.0004L18.2452 7.28137C18.4837 7.04357 18.673 6.76099 18.8022 6.44986C18.9313 6.13872 18.9979 5.80514 18.9979 5.46824C18.9979 5.13135 18.9313 4.79777 18.8022 4.48663C18.673 4.17549 18.4837 3.89292 18.2452 3.65511L17.3396 2.75139C16.859 2.27095 16.2074 2.00107 15.528 2.00107C14.8486 2.00107 14.197 2.27095 13.7164 2.75139Z" stroke="#A4A4A4" strokeWidth="1.5" strokeLinecap="round" className='group-hover/delete:stroke-red-500' strokeLinejoin="round" />
-                </svg>
-            </button>
-            <span className="absolute -top-4 bg-white text-grey font-black px-2 py-1 rounded-full w-20 flex justify-center items-center">1.2 h</span>
-            <button onClick={() => onUpdate({ ...game, played: !game.played })} className='absolute -left-7 bottom-8 bg-white rounded-full p-4 hover:bg-light-grey transition-all duration-300 opacity-0 group-hover:opacity-100'>
-                {game.played ?
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M16.4226 4.75593C16.748 4.43049 16.748 3.90285 16.4226 3.57741C16.0972 3.25198 15.5695 3.25198 15.2441 3.57741L11.6933 7.12819C11.1971 6.83494 10.6182 6.66667 10 6.66667C8.15905 6.66667 6.66667 8.15905 6.66667 10C6.66667 10.6182 6.83494 11.1971 7.12818 11.6933L3.57741 15.2441C3.25197 15.5695 3.25197 16.0972 3.57741 16.4226C3.90285 16.748 4.43048 16.748 4.75592 16.4226L8.30669 12.8718C8.80292 13.1651 9.38183 13.3333 10 13.3333C11.8409 13.3333 13.3333 11.8409 13.3333 10C13.3333 9.38184 13.1651 8.80292 12.8718 8.30669L16.4226 4.75593ZM10.4317 8.38975C10.294 8.353 10.1493 8.33334 10 8.33334C9.0795 8.33334 8.33333 9.0795 8.33333 10C8.33333 10.1493 8.353 10.294 8.38975 10.4317L10.4317 8.38975ZM9.56833 11.6103L11.6102 9.56834C11.647 9.706 11.6667 9.85067 11.6667 10C11.6667 10.9205 10.9205 11.6667 10 11.6667C9.85067 11.6667 9.706 11.647 9.56833 11.6103ZM13.1376 4.01725C12.1906 3.60041 11.1396 3.33334 10 3.33334C7.62295 3.33334 5.63097 4.49552 4.1651 5.75496C2.6939 7.01897 1.67297 8.448 1.21989 9.1415C0.877549 9.66542 0.877549 10.3346 1.21989 10.8585C1.6023 11.4438 2.38922 12.5531 3.50995 13.6449L4.68855 12.4663C3.71292 11.5191 3.00953 10.5443 2.65002 10C3.07533 9.35617 3.98193 8.10965 5.25122 7.01912C6.56168 5.89321 8.17978 5 10 5C10.6432 5 11.2612 5.11154 11.8494 5.30549L13.1376 4.01725ZM10 15C9.35683 15 8.73883 14.8884 8.15069 14.6945L6.86246 15.9828C7.80946 16.3996 8.8605 16.6667 10 16.6667C12.3771 16.6667 14.3691 15.5045 15.835 14.2451C17.3062 12.981 18.3271 11.552 18.7802 10.8585C19.1225 10.3346 19.1225 9.66542 18.7802 9.1415C18.3977 8.55617 17.6108 7.44689 16.4901 6.35509L15.3115 7.53369C16.2872 8.48092 16.9906 9.45575 17.3501 10C16.9247 10.6438 16.0182 11.8903 14.7488 12.9809C13.4384 14.1068 11.8202 15 10 15Z" fill="#A4A4A4" />
-                    </svg>
-                    :
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.66667 7.08333C6.66667 6.6231 6.29357 6.25 5.83333 6.25C5.37309 6.25 5 6.6231 5 7.08333V7.5H4.58333C4.12309 7.5 3.75 7.87309 3.75 8.33333C3.75 8.79358 4.12309 9.16667 4.58333 9.16667H5V9.58333C5 10.0436 5.37309 10.4167 5.83333 10.4167C6.29357 10.4167 6.66667 10.0436 6.66667 9.58333V9.16667H7.08333C7.54357 9.16667 7.91667 8.79358 7.91667 8.33333C7.91667 7.87309 7.54357 7.5 7.08333 7.5H6.66667V7.08333Z" fill="#1D1D1D" />
-                        <path d="M15 6.66666C15 7.1269 14.627 7.49999 14.1667 7.49999C13.7065 7.49999 13.3334 7.1269 13.3334 6.66666C13.3334 6.20643 13.7065 5.83333 14.1667 5.83333C14.627 5.83333 15 6.20643 15 6.66666Z" fill="#1D1D1D" />
-                        <path d="M14.1667 10.8333C14.627 10.8333 15 10.4603 15 10C15 9.53976 14.627 9.16667 14.1667 9.16667C13.7065 9.16667 13.3334 9.53976 13.3334 10C13.3334 10.4603 13.7065 10.8333 14.1667 10.8333Z" fill="#1D1D1D" />
-                        <path d="M13.3333 8.33333C13.3333 8.79358 12.9602 9.16667 12.5 9.16667C12.0397 9.16667 11.6666 8.79358 11.6666 8.33333C11.6666 7.87309 12.0397 7.5 12.5 7.5C12.9602 7.5 13.3333 7.87309 13.3333 8.33333Z" fill="#1D1D1D" />
-                        <path d="M15.8333 9.16667C16.2936 9.16667 16.6667 8.79358 16.6667 8.33333C16.6667 7.87309 16.2936 7.5 15.8333 7.5C15.3731 7.5 15 7.87309 15 8.33333C15 8.79358 15.3731 9.16667 15.8333 9.16667Z" fill="#1D1D1D" />
-                        <path fillRule="evenodd" clipRule="evenodd" d="M10 2.5C8.48996 2.5 6.63535 2.71514 5.18156 2.92442C3.28592 3.1973 1.74251 4.59747 1.34165 6.49025C1.11732 7.54946 0.897491 8.80183 0.847116 9.85033C0.810996 10.6021 0.731692 11.6526 0.64767 12.6602C0.560254 13.7087 0.909608 14.7887 1.5507 15.5567C2.2049 16.3406 3.241 16.8689 4.43642 16.5344C5.20182 16.3202 5.81344 15.7823 6.26712 15.2522C6.73088 14.7104 7.09997 14.0937 7.36283 13.5919C7.56522 13.2056 7.92448 12.9879 8.26287 12.9879H11.7372C12.0755 12.9879 12.4349 13.2056 12.6372 13.5919C12.9001 14.0937 13.2692 14.7104 13.733 15.2522C14.1866 15.7823 14.7982 16.3202 15.5636 16.5344C16.759 16.8689 17.7951 16.3406 18.4494 15.5567C19.0905 14.7887 19.4398 13.7087 19.3524 12.6602C19.2684 11.6526 19.189 10.6021 19.153 9.85033C19.1025 8.80183 18.8827 7.54946 18.6584 6.49025C18.2575 4.59747 16.7141 3.1973 14.8185 2.92442C13.3647 2.71514 11.5101 2.5 10 2.5ZM5.41903 4.57408C6.85624 4.36719 8.61404 4.16667 10 4.16667C11.386 4.16667 13.1438 4.36719 14.581 4.57408C15.8042 4.75016 16.776 5.64574 17.0279 6.83556C17.2473 7.87137 17.4444 9.01858 17.4882 9.93033C17.5258 10.7133 17.6073 11.7886 17.6915 12.7987C17.7427 13.413 17.5285 14.059 17.1698 14.4888C16.8241 14.903 16.4241 15.0445 16.0128 14.9294C15.7081 14.8441 15.3606 14.5908 14.9991 14.1684C14.6476 13.7578 14.3454 13.2609 14.1135 12.8185C13.6703 11.9723 12.7902 11.3212 11.7372 11.3212H8.26287C7.20986 11.3212 6.3298 11.9723 5.88649 12.8185C5.65469 13.2609 5.35242 13.7578 5.00095 14.1684C4.6394 14.5908 4.29193 14.8441 3.98723 14.9294C3.57595 15.0445 3.17589 14.903 2.83025 14.4888C2.47151 14.059 2.25736 13.413 2.30857 12.7987C2.3928 11.7886 2.47424 10.7133 2.51186 9.93033C2.55567 9.01858 2.75278 7.87137 2.97215 6.83556C3.22413 5.64574 4.19585 4.75016 5.41903 4.57408Z" fill="#1D1D1D" />
-                    </svg>
+  const { game, onRemove, onUpdate } = props;
+  return (
+    <div className="flex flex-col gap-2 relative flex items-center justify-center font-montserrat w-[264px] h-[124px] bg-darkest-grey rounded-lg group">
+      <button
+        onClick={() => onRemove(game._id)}
+        className="group/delete z-10 absolute -right-4 -top-4 bg-darkest-grey rounded-full p-2 hover:bg-red-900 transition-all duration-300 opacity-0 group-hover:opacity-100"
+      >
+        <RemoveIcon />
+      </button>
+      <span className="absolute -top-4 bg-white text-grey font-black px-2 py-1 rounded-full w-20 flex justify-center items-center">
+        1.2 h
+      </span>
+      <button
+        onClick={() => onUpdate({ ...game, played: !game.played })}
+        className="absolute -left-2 scale-75 group-hover:scale-100 group-hover:-left-7 bottom-8 bg-white rounded-full p-4 hover:bg-light-grey transition-all duration-300 opacity-0 group-hover:opacity-100"
+      >
+        {game.played ? (
+          <GameCrossedIcon className="fill-darkest-grey" />
+        ) : (
+          <GameIcon className="fill-darkest-grey" />
+        )}
+      </button>
 
-                }
-            </button>
-            <h3 className="text-white text-lg font-black w-full text-center line-clamp-2 px-8">{game.gameName}</h3>
-        </div>
-    );
-}
+      <h3 className="text-white text-lg font-black w-full text-center line-clamp-2 px-8">
+        {game.gameName.split("").map((letter, index) => (
+          <AnimatePresence key={`game-letter-${letter}-${index}`}>
+            <motion.span
+              variants={LetterAnimation}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: index * 0.02 }}
+            >
+              {letter}
+            </motion.span>
+          </AnimatePresence>
+        ))}
+      </h3>
+    </div>
+  );
+};
 
 export const GameCardSkeleton = () => {
-    return (
-        <div className="flex flex-col gap-2 relative flex items-center justify-center font-montserrat w-[264px] h-[124px] bg-darkest-grey rounded-lg animate-pulse">
-            <span className="absolute -top-4 bg-light-grey h-8 rounded-full w-20" />
-        </div>
-    );
-}
+  return (
+    <div className="flex flex-col gap-2 relative flex items-center justify-center font-montserrat w-[264px] h-[124px] bg-darkest-grey rounded-lg animate-pulse">
+      <span className="absolute -top-4 bg-light-grey h-8 rounded-full w-20" />
+    </div>
+  );
+};
+
+const LetterAnimation = {
+  hidden: { opacity: 0, transform: "translateY(30px)", scale: 0.8 },
+  visible: { opacity: 1, transform: "translateY(0)", scale: 1 },
+};
 
 export default GameCard;

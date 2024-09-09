@@ -112,9 +112,11 @@ module.exports = async (req, res) => {
         const activities = await Activity.find().populate('activity');
         const filteredActivities = activities.filter(({ activity }) => activity !== null);
         activities.forEach((activity) => {
+        activities.forEach(async (activity) => {
           if (activity.activity === null) {
             console.log('Activity is null. Deleting...', activity);
             Activity.findByIdAndDelete(activity._id);
+            await Activity.findByIdAndDelete(activity._id);
           }
         })
         res.status(200).json(filteredActivities);

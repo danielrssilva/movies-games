@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import MovieForm from "../components/MovieForm";
-import { useAddMovie, useDeleteMovie, useGetMovieInfo, useMovies, useUpdateMovie } from "../api/api";
+import {
+  useAddMovie,
+  useDeleteMovie,
+  useGetMovieInfo,
+  useMovies,
+  useUpdateMovie,
+} from "../api/api";
 import MovieCard, { MovieCardSkeleton } from "../components/MovieCard";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import plurify from "../helpers/plurify";
 
 const Movie: React.FC = () => {
   const { data: movies = [], isLoading } = useMovies();
@@ -28,9 +35,9 @@ const Movie: React.FC = () => {
         ratings: {
           hakush: 0,
           thaai: 0,
-          danny: 0
-        }
-      }
+          danny: 0,
+        },
+      };
       addMovie(newMovie);
       setMovieData(null);
       setMovie(null);
@@ -52,8 +59,10 @@ const Movie: React.FC = () => {
 
   const groupAndOrderMovies = () => {
     const order = ["Danny", "Hakush", "Thaai"];
-    const grouped = order.map(person => movies.filter(movie => movie.person === person && !movie.watched));
-    const maxLength = Math.max(...grouped.map(group => group.length));
+    const grouped = order.map((person) =>
+      movies.filter((movie) => movie.person === person && !movie.watched)
+    );
+    const maxLength = Math.max(...grouped.map((group) => group.length));
 
     const result = [];
     for (let i = 0; i < maxLength; i++) {
@@ -66,7 +75,7 @@ const Movie: React.FC = () => {
     return result;
   };
 
-  const watchedMovies = movies.filter(movie => movie.watched === true);
+  const watchedMovies = movies.filter((movie) => movie.watched === true);
   const orderedMovies = groupAndOrderMovies();
 
   return (
@@ -78,10 +87,16 @@ const Movie: React.FC = () => {
         onPersonChange={setPerson}
         onSubmit={handleSubmit}
       />
-      <h1
-        className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
-      >
-        Próximos filmes <span className="text-light-grey font-normal lowercase text-[24px]">{orderedMovies.length} filmes na lista</span>
+      <h1 className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]">
+        Próximos filmes{" "}
+        {orderedMovies.length > 0 && (
+          <span className="text-light-grey font-normal lowercase text-[24px]">
+            {`${orderedMovies.length} ${plurify(
+              "filme",
+              orderedMovies.length
+            )} na lista`}
+          </span>
+        )}
       </h1>
       <div className="flex flex-wrap gap-10 mb-10 min-h-[400px]">
         {!isLoading && orderedMovies.length === 0 && (
@@ -96,26 +111,61 @@ const Movie: React.FC = () => {
             <MovieCardSkeleton />
           </>
         )}
-        {orderedMovies.map((movie, index) => (
-          <motion.div key={movie._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * index, duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }} exit={{ opacity: 0, translateY: 15 }}>
-            <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
-          </motion.div>
-        ))}
+        <AnimatePresence mode="popLayout">
+          {orderedMovies.map((movie, index) => (
+            <motion.div
+              key={`${movie._id}-${index}`}
+              initial={{ opacity: 0, translateY: -15 }}
+              transition={{ delay: 0.1 * index, duration: 0.3 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0, translateY: 15 }}
+            >
+              <MovieCard
+                onUpdate={updateMovie}
+                onRemove={deleteMovie}
+                key={movie._id}
+                movie={movie}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-      <h1
-        className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]"
-      >
-        Assistidos <span className="text-light-grey font-normal lowercase text-[24px]">{watchedMovies.length} filmes assistidos</span>
+      <h1 className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]">
+        Assistidos{" "}
+        {watchedMovies.length > 0 && (
+          <span className="text-light-grey font-normal lowercase text-[24px]">
+            {`${watchedMovies.length} ${plurify(
+              "filme",
+              watchedMovies.length
+            )} ${plurify("assistido", watchedMovies.length)}`}
+          </span>
+        )}
       </h1>
       <div className="flex flex-wrap gap-10">
-        {watchedMovies.map((movie, index) => (
-          <motion.div key={movie._id} initial={{ opacity: 0, translateY: -15 }} transition={{ delay: 0.1 * (index + orderedMovies.length), duration: 0.3 }} animate={{ opacity: 1, translateY: 0 }}>
-            <MovieCard onUpdate={updateMovie} onRemove={deleteMovie} key={movie._id} movie={movie} />
-          </motion.div>
-        ))}
+        <AnimatePresence mode="popLayout">
+          {watchedMovies.map((movie, index) => (
+            <motion.div
+              key={`${movie._id}-watched`}
+              initial={{ opacity: 0, translateY: -15 }}
+              transition={{
+                delay: 0.1 * (index + orderedMovies.length),
+                duration: 0.3,
+              }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0, translateY: -15 }}
+            >
+              <MovieCard
+                onUpdate={updateMovie}
+                onRemove={deleteMovie}
+                key={movie._id}
+                movie={movie}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
-}
+};
 
 export default Movie;
