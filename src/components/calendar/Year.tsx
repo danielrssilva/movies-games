@@ -23,7 +23,9 @@ const Year = (props: YearProps) => {
           date={mondays[0]}
           activityCount={
             activities.filter(
-              (activity) => activity.date.getMonth() === mondays[0]?.getMonth()
+              (activity) =>
+                activity.date.getMonth() === mondays[0]?.getMonth() &&
+                activity.date.getFullYear() === mondays[0]?.getFullYear()
             ).length
           }
           weeksCount={0}

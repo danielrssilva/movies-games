@@ -25,7 +25,7 @@ const Calendar: React.FC = () => {
   const filteredGames = games.filter((game) => !game.played);
 
   useEffect(() => {
-    const date = new Date(),
+    const date = new Date(new Date().getFullYear(), 0, 1),
       year = date.getFullYear(),
       nextYear = year + 1,
       mondays: Date[] = [],
