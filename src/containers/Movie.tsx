@@ -91,7 +91,7 @@ const Movie: React.FC = () => {
         Próximos filmes{" "}
         {orderedMovies.length > 0 && (
           <span className="text-light-grey font-normal lowercase text-[24px]">
-            {`${orderedMovies.length} ${plurify(
+            {`${orderedMovies.filter((movie) => !movie.watched).length} ${plurify(
               "filme",
               orderedMovies.filter((movie) => !movie.watched).length
             )} na lista`}
