@@ -93,7 +93,7 @@ const Movie: React.FC = () => {
           <span className="text-light-grey font-normal lowercase text-[24px]">
             {`${orderedMovies.length} ${plurify(
               "filme",
-              orderedMovies.length
+              orderedMovies.filter((movie) => !movie.watched).length
             )} na lista`}
           </span>
         )}
