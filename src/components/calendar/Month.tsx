@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface MonthProps {
   date: Date;
@@ -19,10 +19,11 @@ const Month: React.FC<MonthProps> = (props) => {
     ) {
       currentMonthRef.current.scrollIntoView({
         behavior: "instant",
+        block: "nearest",
         inline: "start",
       });
     }
-  }, []);
+  }, [date]);
   return (
     <div
       ref={currentMonthRef}

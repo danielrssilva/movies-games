@@ -8,5 +8,23 @@ html, body, #root {
 }
 
 body {
-  background-color: #f8f9fa;
+  background-color: #262626;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.4rem;
+  height: 0.4rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #1D1D1D; 
+  border-radius: 0.8rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white; 
+  border-radius: 0.8rem;
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SearchInput from "./SearchInput";
 import { useSearchMovies } from "../api/api";
+import CollapseButton from "./CollapseButton";
 
 interface MovieFormProps {
   movie: MovieSearch | null;
@@ -60,28 +61,10 @@ const MovieForm: React.FC<MovieFormProps> = ({
           <h1 className="text-2xl font-bold text-white uppercase font-montserrat">
             Adicionar filme
           </h1>
-          <button
-            type="button"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-white hover:text-gray-300 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-6 w-6 transition-transform duration-300 ${
-                isCollapsed ? "" : "rotate-180"
-              }`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
+          <CollapseButton
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
         </div>
       </header>
       <div className="mb-4 relative">
