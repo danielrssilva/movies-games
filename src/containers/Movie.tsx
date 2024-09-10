@@ -60,7 +60,7 @@ const Movie: React.FC = () => {
   const groupAndOrderMovies = () => {
     const order = ["Danny", "Hakush", "Thaai"];
     const grouped = order.map((person) =>
-      movies.filter((movie) => movie.person === person && !movie.watched)
+      movies.filter((movie) => movie.person === person)
     );
     const maxLength = Math.max(...grouped.map((group) => group.length));
 
@@ -112,22 +112,24 @@ const Movie: React.FC = () => {
           </>
         )}
         <AnimatePresence mode="popLayout">
-          {orderedMovies.map((movie, index) => (
-            <motion.div
-              key={`${movie._id}-${index}`}
-              initial={{ opacity: 0, translateY: -15 }}
-              transition={{ delay: 0.1 * index, duration: 0.3 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              exit={{ opacity: 0, translateY: 15 }}
-            >
-              <MovieCard
-                onUpdate={updateMovie}
-                onRemove={deleteMovie}
-                key={movie._id}
-                movie={movie}
-              />
-            </motion.div>
-          ))}
+          {orderedMovies
+            .filter((movie) => !movie.watched)
+            .map((movie, index) => (
+              <motion.div
+                key={`${movie._id}-${index}`}
+                initial={{ opacity: 0, translateY: -15 }}
+                transition={{ delay: 0.1 * index, duration: 0.3 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                exit={{ opacity: 0, translateY: 15 }}
+              >
+                <MovieCard
+                  onUpdate={updateMovie}
+                  onRemove={deleteMovie}
+                  key={movie._id}
+                  movie={movie}
+                />
+              </motion.div>
+            ))}
         </AnimatePresence>
       </div>
       <h1 className="mb-10 text-white transition-colors duration-300 uppercase font-montserrat font-bold text-[44px]">
