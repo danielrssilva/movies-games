@@ -19,7 +19,6 @@ const Month: React.FC<MonthProps> = (props) => {
     ) {
       currentMonthRef.current.scrollIntoView({
         behavior: "instant",
-        block: "start",
         inline: "start",
       });
     }

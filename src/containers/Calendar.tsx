@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Month,
-  Day,
   MovieDraggable,
   GameDraggable,
   DraggableSkeleton,

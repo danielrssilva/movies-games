@@ -5,5 +5,5 @@ import Calendar from "./Calendar";
 export {
     Calendar,
     Movie,
-    Game
+    Game,
 }
