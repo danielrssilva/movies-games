@@ -3,7 +3,7 @@ import GameForm from "../components/GameForm";
 import { useAddGame, useDeleteGame, useGames, useUpdateGame } from "../api/api";
 import GameCard, { GameCardSkeleton } from "../components/GameCard";
 import { AnimatePresence, motion } from "framer-motion";
-import plurify from "../helpers/plurify";
+import pluralize from "../helpers/pluralize";
 
 const Game: React.FC = () => {
   const { data: games = [], isLoading } = useGames();
@@ -37,7 +37,7 @@ const Game: React.FC = () => {
         Próximos jogos{" "}
         {nextGames.length > 0 && (
           <span className="text-light-grey font-normal lowercase text-[24px]">
-            {nextGames.length} {plurify("jogo", nextGames.length)} na lista
+            {nextGames.length} {pluralize("jogo", nextGames.length)} na lista
           </span>
         )}
       </h1>
@@ -72,10 +72,10 @@ const Game: React.FC = () => {
         Jogos já finalizados{" "}
         {playedGames.length > 0 && (
           <span className="text-light-grey font-normal lowercase text-[24px]">
-            {`${playedGames.length} ${plurify(
+            {`${playedGames.length} ${pluralize(
               "jogo",
               playedGames.length
-            )} ${plurify("finalizado", playedGames.length)}`}
+            )} ${pluralize("finalizado", playedGames.length)}`}
           </span>
         )}
       </h1>

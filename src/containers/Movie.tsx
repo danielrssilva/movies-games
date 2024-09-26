@@ -9,7 +9,8 @@ import {
 } from "../api/api";
 import MovieCard, { MovieCardSkeleton } from "../components/MovieCard";
 import { AnimatePresence, motion } from "framer-motion";
-import plurify from "../helpers/plurify";
+import pluralize from "../helpers/pluralize";
+import { groupAndOrderMovies } from "../helpers/movies";
 
 const Movie: React.FC = () => {
   const { data: movies = [], isLoading } = useMovies();
@@ -57,26 +58,8 @@ const Movie: React.FC = () => {
     }
   }, [movieInfo]);
 
-  const groupAndOrderMovies = () => {
-    const order = ["Danny", "Hakush", "Thaai"];
-    const grouped = order.map((person) =>
-      movies.filter((movie) => movie.person === person)
-    );
-    const maxLength = Math.max(...grouped.map((group) => group.length));
-
-    const result = [];
-    for (let i = 0; i < maxLength; i++) {
-      for (const group of grouped) {
-        if (group[i]) {
-          result.push(group[i]);
-        }
-      }
-    }
-    return result;
-  };
-
   const watchedMovies = movies.filter((movie) => movie.watched === true);
-  const orderedMovies = groupAndOrderMovies();
+  const orderedMovies = groupAndOrderMovies(movies);
 
   return (
     <div className="relative">
@@ -91,7 +74,7 @@ const Movie: React.FC = () => {
         Próximos filmes{" "}
         {orderedMovies.length > 0 && (
           <span className="text-light-grey font-normal lowercase text-[24px]">
-            {`${orderedMovies.filter((movie) => !movie.watched).length} ${plurify(
+            {`${orderedMovies.filter((movie) => !movie.watched).length} ${pluralize(
               "filme",
               orderedMovies.filter((movie) => !movie.watched).length
             )} na lista`}
@@ -136,10 +119,10 @@ const Movie: React.FC = () => {
         Assistidos{" "}
         {watchedMovies.length > 0 && (
           <span className="text-light-grey font-normal lowercase text-[24px]">
-            {`${watchedMovies.length} ${plurify(
+            {`${watchedMovies.length} ${pluralize(
               "filme",
               watchedMovies.length
-            )} ${plurify("assistido", watchedMovies.length)}`}
+            )} ${pluralize("assistido", watchedMovies.length)}`}
           </span>
         )}
       </h1>

@@ -11,17 +11,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import Year from "../components/calendar/Year";
 import { dayAnimation } from "../helpers/animations";
 import CollapseButton from "../components/CollapseButton";
+import { groupAndOrderMovies } from "../helpers/movies";
 
 const Calendar: React.FC = () => {
   const [thisYearMondays, setThisYearMondays] = useState<Date[]>([]);
   const [nextYearMondays, setNextYearMondays] = useState<Date[]>([]);
-  const [isNextYearCollapsed, setIsNextYearCollapsed] = useState(false);
+  const [isNextYearCollapsed, setIsNextYearCollapsed] = useState(true);
   const { data: activities = [], isLoading: isLoadingActivities } =
     useGetActivities();
   const { data: games = [], isLoading: isLoadingGames } = useGames();
   const { data: movies = [], isLoading: isLoadingMovies } = useMovies();
 
   const filteredMovies = movies.filter((movie) => !movie.watched);
+  const orderedMovies = groupAndOrderMovies(filteredMovies);
   const filteredGames = games.filter((game) => !game.played);
 
   useEffect(() => {
@@ -121,10 +123,10 @@ const Calendar: React.FC = () => {
           <section className="flex flex-col gap-8 w-1/2">
             <h1 className="uppercase font-montserrat font-bold text-[64px] text-white">
               Filmes
-              {filteredMovies.length > 0 && (
+              {orderedMovies.length > 0 && (
                 <span className="text-lightest-grey text-xl font-thin ml-4">
-                  {`${filteredMovies.length} ${
-                    filteredMovies.length === 1 ? "filme" : "filmes"
+                  {`${orderedMovies.length} ${
+                    orderedMovies.length === 1 ? "filme" : "filmes"
                   }`}
                 </span>
               )}
@@ -138,7 +140,7 @@ const Calendar: React.FC = () => {
                 </>
               )}
               <AnimatePresence>
-                {filteredMovies.map((movie, index) => (
+                {orderedMovies.map((movie, index) => (
                   <motion.div
                     key={`draggable-movie-${movie._id}`}
                     variants={dayAnimation}
