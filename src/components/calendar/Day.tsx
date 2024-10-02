@@ -98,7 +98,9 @@ const Day: React.FC<Day> = ({ day, month, year, activity }) => {
         isLoading
           ? "animate-pulse shadow-[0_0_15px_0_rgba(255,255,255,0.5)]"
           : ""
-      } ${isOver ? "shadow-[0_0_15px_0_rgba(255,255,255,0.5)] animate-pulse" : ""}`}
+      } ${
+        isOver ? "shadow-[0_0_15px_0_rgba(255,255,255,0.5)] animate-pulse" : ""
+      }`}
     >
       <div className="absolute -top-4 flex justify-between w-full px-4">
         <motion.span

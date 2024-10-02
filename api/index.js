@@ -1,3 +1,6 @@
+require('dotenv').config({ path: './.env' });
+
+const express = require('express');  // Changed this line
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -46,10 +49,14 @@ const Game = mongoose.model('Game', gameSchema);
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState >= 1) return;
-  return mongoose.connect(process.env.MONGODB_URI);
+
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/moviesgamesdb';
+  console.log('Connecting to MongoDB with URI:', uri);
+  return mongoose.connect(uri);
 }
 
-module.exports = async (req, res) => {
+const handler = async (req, res) => {
+  console.log(`Received ${req.method} request for ${req.url}`);
   try {
     await connectToDatabase();
 
@@ -114,7 +121,6 @@ module.exports = async (req, res) => {
         activities.forEach(async (activity) => {
           if (activity.activity === null) {
             console.log('Activity is null. Deleting...', activity);
-            Activity.findByIdAndDelete(activity._id);
             await Activity.findByIdAndDelete(activity._id);
           }
         })
@@ -175,3 +181,19 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 };
+
+try {
+  if (require.main === module) {
+    const app = express();
+    // Add CORS middleware
+    app.use(cors());
+    app.use(express.json());
+    app.use('/api', handler);
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  }
+} catch (error) {
+  console.error('Error starting server:', error);
+}
+
+module.exports = handler;

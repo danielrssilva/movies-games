@@ -48,7 +48,7 @@ const Movie: React.FC = () => {
 
   useEffect(() => {
     if (movie) {
-      getMovieInfo(movie.Title);
+      getMovieInfo(movie);
     }
   }, [movie, getMovieInfo]);
 
