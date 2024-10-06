@@ -67,7 +67,7 @@ async function connectToDatabase() {
 }
 
 const handler = async (req, res) => {
-  console.log(`Received ${req.method} request for ${req.url}`);
+  // console.log(`Received ${req.method} request for ${req.url}`);
   try {
     await connectToDatabase();
 
@@ -116,7 +116,6 @@ const handler = async (req, res) => {
         { method: "POST" }
       );
       const clientCredentialsResult = await clientCredentials.json();
-      console.log(clientCredentialsResult);
       const gamesSearch = await fetch("https://api.igdb.com/v4/games", {
         method: "POST",
         headers: {
@@ -127,7 +126,7 @@ const handler = async (req, res) => {
         body: `fields name, cover.url, involved_companies.company.name, release_dates.y, rating; search "${search}";`,
       });
       const gamesSearchResult = await gamesSearch.json();
-      console.log(gamesSearchResult);
+      console.log(clientCredentialsResult, gamesSearchResult);
       res.status(200).json(gamesSearchResult);
     }
     // Game CRUD operations
