@@ -108,14 +108,15 @@ const handler = async (req, res) => {
       req.url.startsWith("/games/search")
     ) {
       const clientId =
-        process.env.TWITCH_CLIENT_ID || "a2h4ndeoftfxf07eqibtm7mus658nf";
+        process.env.TWITCH_CLIENT_ID;
       const clientSecret =
-        process.env.TWITCH_CLIENT_SECRET || "or3ydblyw4txl3yga6nyi5pxam1n1n";
+        process.env.TWITCH_CLIENT_SECRET;
       const clientCredentials = await fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
         { method: "POST" }
       );
       const clientCredentialsResult = await clientCredentials.json();
+      console.log(clientCredentialsResult);
       const gamesSearch = await fetch("https://api.igdb.com/v4/games", {
         method: "POST",
         headers: {
@@ -126,6 +127,7 @@ const handler = async (req, res) => {
         body: `fields name, cover.url, involved_companies.company.name, release_dates.y, rating; search "${search}";`,
       });
       const gamesSearchResult = await gamesSearch.json();
+      console.log(gamesSearchResult);
       res.status(200).json(gamesSearchResult);
     }
     // Game CRUD operations
