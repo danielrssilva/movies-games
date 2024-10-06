@@ -10,11 +10,13 @@ interface SearchInputProps {
 }
 
 const SearchInput: React.FC<SearchInputProps> = (props) => {
-  const { value, label, onChange, placeholder = "Search", id, icon } = props;
+  const { value, label, onChange, placeholder = "Buscar", id, icon } = props;
   const [localValue, setLocalValue] = React.useState(value);
 
   useEffect(() => {
-    const timer = setTimeout(() => onChange(localValue), 300);
+    const timer = setTimeout(() => {
+      onChange(localValue);
+    }, 500);
     return () => clearTimeout(timer);
   }, [localValue, onChange]);
 
@@ -30,7 +32,7 @@ const SearchInput: React.FC<SearchInputProps> = (props) => {
         autoComplete="off"
         type="text"
         id={id}
-        className="w-full px-4 pr-10 pl-0 text-sm border-b border-border-grey placeholder:text-border-grey pt-1 pb-3 text-lg font-montserrat uppercase font-bold text-white bg-darkest-grey focus:outline-none"
+        className="w-full px-4 pr-10 pl-0 border-b border-border-grey placeholder:text-border-grey pt-1 pb-3 text-xl font-montserrat uppercase font-bold text-white bg-darkest-grey focus:outline-none"
         placeholder={placeholder}
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}

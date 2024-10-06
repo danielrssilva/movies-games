@@ -56,7 +56,7 @@ const MovieDraggable: React.FC<MovieDraggableProps> = ({ movie }) => {
         />
       </span>
       <div className="flex flex-col absolute top-5 items-center max-w-48">
-        <h3 className="text-white text-lg font-black text-center">
+        <h3 className="text-white text-lg font-bold text-center">
           {movie.movieName}
         </h3>
       </div>

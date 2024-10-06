@@ -24,7 +24,7 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
         alt={movie.movieName}
         className="w-full h-full object-cover rounded-lg"
       />
-      <span className="absolute h-full w-full bg-gradient-to-t from-black to-transparent rounded-lg" />
+      <span className="absolute h-full w-full bg-gradient-to-t from-black to-transparent rounded-lg transition-all group-hover:opacity-0" />
       {movie.watched && (
         <div className="absolute transition-all duration-300 flex opacity-0 group-hover:opacity-100 items-center justify-center top-0 left-0 w-full h-full bg-darkest-grey rounded-lg">
           <div className="w-full flex flex-col gap-8 mb-12 items-center">
@@ -79,7 +79,7 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
           </div>
         </div>
       )}
-      <span className="absolute -top-4 bg-white text-grey font-black px-2 py-1 rounded-full w-20 flex justify-center items-center">
+      <span className="absolute -top-4 bg-white text-grey font-bold px-2 py-1 rounded-full w-20 flex justify-center items-center">
         {movie.rating}
       </span>
       <button
@@ -135,11 +135,11 @@ const MovieCard: React.FC<MovieCardProps> = (props) => {
       <span className="z-10 absolute right-0 group-hover:-right-8 scale-75 group-hover:scale-100 bottom-8 rounded-full opacity-0 transition-all duration-300 group-hover:opacity-100">
         <img src={`/images/${movie.person}.png`} alt={movie.person} />
       </span>
-      <div className="flex flex-col absolute bottom-8 items-center max-w-48">
-        <h3 className="text-white text-lg font-black text-center">
+      <div className="flex flex-col absolute bottom-8 items-center max-w-48 group-hover:opacity-0 group-hover:bottom-2 transition-all">
+        <h3 className="text-white text-lg font-bold text-center">
           {movie.movieName}
         </h3>
-        <p className="text-lightest-grey text-sm">{`(${movie.year})`}</p>
+        <p className="text-lightest-grey text-sm">{movie.year}</p>
       </div>
     </div>
   );

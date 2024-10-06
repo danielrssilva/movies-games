@@ -5,6 +5,7 @@ import Star from "./Star";
 import RemoveIcon from "./RemoveIcon";
 import RecurringIcon from "./RecurringIcon";
 import CalendarIcon from "./CalendarIcon";
+import CheckIcon from "./CheckIcon";
 
 export {
   MovieIcon,
@@ -14,4 +15,5 @@ export {
   RemoveIcon,
   RecurringIcon,
   CalendarIcon,
+  CheckIcon,
 };

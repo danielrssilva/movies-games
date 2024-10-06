@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SearchInput from "./SearchInput";
 import { useSearchMovies } from "../api/api";
 import CollapseButton from "./CollapseButton";
+import { CheckIcon, MovieIcon } from "./icons";
 
 interface MovieFormProps {
   movie: MovieSearch | null;
@@ -77,6 +78,7 @@ const MovieForm: React.FC<MovieFormProps> = ({
           onChange={searchMovies}
           label="Qual filme?"
           id="movieName"
+          icon={<MovieIcon />}
         />
         {searchResults && searchResults.Search && showMovieDropdown && (
           <div className="z-10 absolute rounded max-h-[200px] overflow-y-auto p-4 top-20 left-0 w-full h-auto bg-light-bg-grey text-white uppercase text-lg">
@@ -107,14 +109,6 @@ const MovieForm: React.FC<MovieFormProps> = ({
                   </span>
                 </div>
               </button>
-              // <button
-              //   onClick={() => handleMovieChange(movie)}
-              //   key={`${movie.Title}-${movie.Year}`}
-              //   className="w-full font-bold border-b border-border-grey p-2 cursor-pointer gap-2 flex items-end"
-              // >
-              //   {movie.Title}
-              //   <span className="text-light-grey-span font-light text-sm pb-1">{`(${movie.Year})`}</span>
-              // </button>
             ))}
           </div>
         )}
@@ -126,7 +120,7 @@ const MovieForm: React.FC<MovieFormProps> = ({
         <button
           type="button"
           onClick={togglePersonDropdown}
-          className="text-left flex gap-2 w-full px-4 pr-10 pl-0 text-sm border-b border-border-grey placeholder:text-border-grey pt-1 pb-3 text-lg font-montserrat uppercase font-bold text-white bg-darkest-grey focus:outline-none"
+          className="text-left flex items-center gap-2 w-full px-4 pr-10 pl-0 text-xl border-b border-border-grey placeholder:text-border-grey pt-1 pb-3 text-lg font-montserrat uppercase font-bold text-white bg-darkest-grey focus:outline-none"
         >
           <span className="rounded-full w-6">
             <img src={`/images/${person}.png`} alt={person} />
@@ -161,30 +155,51 @@ const MovieForm: React.FC<MovieFormProps> = ({
             />
             <label
               htmlFor="Danny"
-              className="font-bold border-b border-border-grey py-2 cursor-pointer flex items-center gap-2"
+              className="font-bold border-b border-border-grey py-2 cursor-pointer flex justify-between items-center gap-2 w-full"
             >
-              <span className="rounded-full w-6">
-                <img src={`/images/Danny.png`} alt="Danny" />
-              </span>
-              Danny
+              <div className="flex gap-2">
+                <span className="rounded-full w-7">
+                  <img src={`/images/Danny.png`} alt="Danny" />
+                </span>
+                <span>Danny</span>
+              </div>
+              {person === "Danny" && (
+                <span className="justify-self-end">
+                  <CheckIcon />
+                </span>
+              )}
             </label>
             <label
               htmlFor="Hakush"
-              className="font-bold border-b border-border-grey py-2 cursor-pointer flex items-center gap-2"
+              className="font-bold border-b border-border-grey py-2 cursor-pointer flex justify-between items-center gap-2 w-full"
             >
-              <span className="rounded-full w-6">
-                <img src={`/images/Hakush.png`} alt="Hakush" />
-              </span>
-              Hakush
+              <div className="flex gap-2">
+                <span className="rounded-full w-7">
+                  <img src={`/images/Hakush.png`} alt="Hakush" />
+                </span>
+                <span>Hakush</span>
+              </div>
+              {person === "Hakush" && (
+                <span className="justify-self-end">
+                  <CheckIcon />
+                </span>
+              )}
             </label>
             <label
               htmlFor="Thaai"
-              className="font-bold border-b border-border-grey py-2 cursor-pointer flex items-center gap-2"
+              className="font-bold border-b border-border-grey py-2 cursor-pointer flex justify-between items-center gap-2 flex-1"
             >
-              <span className="rounded-full w-6">
-                <img src={`/images/Thaai.png`} alt="Thaai" />
-              </span>
-              Thaai
+              <div className="flex flex-1 gap-2">
+                <span className="rounded-full w-7">
+                  <img src={`/images/Thaai.png`} alt="Thaai" />
+                </span>
+                <span>Thaai</span>
+              </div>
+              {person === "Thaai" && (
+                <span className="justify-self-end">
+                  <CheckIcon />
+                </span>
+              )}
             </label>
           </div>
         )}

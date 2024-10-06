@@ -12,7 +12,7 @@ import {
 import { IconAnimation, LetterAnimation } from "../../helpers/animations";
 
 interface DayProps extends Day {
-  isLoading: boolean,
+  isLoading: boolean;
 }
 
 const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
@@ -34,6 +34,9 @@ const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
       drop: (item: { game: Game; movie: Movie }) => {
         const activityModel = item.game || item.movie;
         const existingActivity = activity?.activity as Game | Movie | undefined;
+        if (existingActivity?._id === activityModel._id) {
+          return;
+        }
         if (existingActivity && existingActivity._id) {
           updateActivity({
             _id: activity?._id || "",
@@ -107,25 +110,33 @@ const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
       }`}
     >
       {game?.cover?.url && (
-        <>
-          <img
+        <AnimatePresence>
+          <motion.img
+            key={game.name}
             src={game.cover?.url.replace("t_thumb", "t_cover_big")}
             alt={game.name}
+            variants={IconAnimation}
+            initial="hidden"
+            animate="visible"
             className="w-full h-full object-cover rounded-lg"
           />
           <span className="absolute h-full w-full bg-gradient-to-t from-black to-transparent rounded-lg" />
-        </>
+        </AnimatePresence>
       )}
 
       {movie?.poster && (
-        <>
-          <img
+        <AnimatePresence>
+          <motion.img
+            key={movie.movieName}
             src={movie.poster}
             alt={movie.movieName}
+            variants={IconAnimation}
+            initial="hidden"
+            animate="visible"
             className="w-full h-full object-cover rounded-lg"
           />
           <span className="absolute h-full w-full bg-gradient-to-t from-black to-transparent rounded-lg" />
-        </>
+        </AnimatePresence>
       )}
       <div className="absolute -top-4 flex justify-between gap-4 w-full px-4 z-10">
         <motion.span
@@ -140,7 +151,7 @@ const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
           variants={IconAnimation}
           initial="hidden"
           animate="visible"
-          className="bg-white text-grey font-black px-2 py-1 rounded-full w-16 flex justify-center items-center relative"
+          className="bg-white text-grey px-2 py-1 rounded-full w-16 flex justify-center items-center relative"
         >
           <motion.div
             variants={IconAnimation}
@@ -167,64 +178,79 @@ const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
         >
           {activity &&
             (!game?.isRecurring ? (
-              <button
-                className="flex w-full items-center justify-center group/complete transition-all duration-300"
-                onClick={handleCompleteActivity}
-                disabled={isLoading}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+              <AnimatePresence>
+                <motion.button
+                  className="flex w-full items-center justify-center group/complete transition-all duration-300"
+                  onClick={handleCompleteActivity}
+                  disabled={isLoading}
+                  key="complete-activity-button"
+                  variants={IconAnimation}
+                  initial="hidden"
+                  animate="visible"
                 >
-                  <path
-                    d="M5.33331 17.2L9.52379 22L20 10"
-                    className={`${
-                      movie?.watched || game?.played
-                        ? "stroke-darkest-grey group-hover/complete:stroke-light-grey-span"
-                        : "stroke-light-grey-span group-hover/complete:stroke-darkest-grey"
-                    }`}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M26.6667 10.0834L15.2378 22.0834L14.6667 21.3334"
-                    className={`${
-                      movie?.watched || game?.played
-                        ? "stroke-darkest-grey group-hover/complete:stroke-light-grey-span"
-                        : "stroke-light-grey-span group-hover/complete:stroke-darkest-grey"
-                    }`}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.33331 17.2L9.52379 22L20 10"
+                      className={`${
+                        movie?.watched || game?.played
+                          ? "stroke-darkest-grey group-hover/complete:stroke-light-grey-span"
+                          : "stroke-light-grey-span group-hover/complete:stroke-darkest-grey"
+                      }`}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M26.6667 10.0834L15.2378 22.0834L14.6667 21.3334"
+                      className={`${
+                        movie?.watched || game?.played
+                          ? "stroke-darkest-grey group-hover/complete:stroke-light-grey-span"
+                          : "stroke-light-grey-span group-hover/complete:stroke-darkest-grey"
+                      }`}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </motion.button>
+              </AnimatePresence>
             ) : (
-              <RecurringIcon />
+              <AnimatePresence>
+                <motion.span
+                  key="recurring-game-icon"
+                  variants={IconAnimation}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <RecurringIcon />
+                </motion.span>
+              </AnimatePresence>
             ))}
         </motion.span>
       </div>
       <div className="flex flex-col absolute bottom-8 items-center max-w-48">
         {game && (
           <>
-            <h3 className="text-white text-lg font-black text-center">
+            <h3 className="text-white text-lg font-bold text-center">
               {game?.name}
             </h3>
-            <p className="text-lightest-grey text-sm">{`(${
-              game?.release_dates[0]?.y || "upcoming"
-            })`}</p>
+            <p className="text-lightest-grey text-sm">
+              {game?.release_dates[0]?.y || "upcoming"}
+            </p>
           </>
         )}
         {movie && (
           <>
-            <h3 className="text-white text-lg font-black text-center">
+            <h3 className="text-white text-lg font-bold text-center">
               {movie.movieName}
             </h3>
-            <p className="text-lightest-grey text-sm">{`(${movie.year})`}</p>
+            <p className="text-lightest-grey text-sm">{movie.year}</p>
           </>
         )}
       </div>
@@ -235,7 +261,7 @@ const Day: React.FC<DayProps> = ({ day, month, year, activity, isLoading }) => {
             onClick={handleDeleteActivity}
             disabled={isLoading}
           >
-           <CalendarIcon />
+            <CalendarIcon />
           </button>
         </div>
       )}
