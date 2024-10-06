@@ -62,12 +62,11 @@ async function connectToDatabase() {
 
   const uri =
     process.env.MONGODB_URI || "mongodb://localhost:27017/moviesgamesdb";
-  console.log("Connecting to MongoDB with URI:", uri);
   return mongoose.connect(uri);
 }
 
 const handler = async (req, res) => {
-  // console.log(`Received ${req.method} request for ${req.url}`);
+  console.log(`Received ${req.method} request for ${req.url}`);
   try {
     await connectToDatabase();
 
@@ -107,26 +106,28 @@ const handler = async (req, res) => {
       req.url.startsWith("/games/search") ||
       req.url.startsWith("/games/search")
     ) {
-      const clientId =
-        process.env.TWITCH_CLIENT_ID;
-      const clientSecret =
-        process.env.TWITCH_CLIENT_SECRET;
+      const clientId = process.env.TWITCH_CLIENT_ID;
+      const clientSecret = process.env.TWITCH_CLIENT_SECRET;
+      const awsKey = process.env.AWS_KEY;
       const clientCredentials = await fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
         { method: "POST" }
       );
       const clientCredentialsResult = await clientCredentials.json();
-      const gamesSearch = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Client-ID": clientId,
-          Authorization: `Bearer ${clientCredentialsResult.access_token}`,
-        },
-        body: `fields name, cover.url, involved_companies.company.name, release_dates.y, rating; search "${search}";`,
-      });
+      const gamesSearch = await fetch(
+        "https://dvpzbd5az0.execute-api.us-west-2.amazonaws.com/",
+        {
+          method: "POST",
+          headers: {
+            "x-api-key": awsKey,
+            Accept: "application/json",
+            "Client-ID": clientId,
+            Authorization: `Bearer ${clientCredentialsResult.access_token}`,
+          },
+          body: `fields name, cover.url, involved_companies.company.name, release_dates.y, rating; search "${search}";`,
+        }
+      );
       const gamesSearchResult = await gamesSearch.json();
-      console.log(clientCredentialsResult, gamesSearchResult);
       res.status(200).json(gamesSearchResult);
     }
     // Game CRUD operations
