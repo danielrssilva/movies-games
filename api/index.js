@@ -115,7 +115,7 @@ const handler = async (req, res) => {
       );
       const clientCredentialsResult = await clientCredentials.json();
       const gamesSearch = await fetch(
-        "https://dvpzbd5az0.execute-api.us-west-2.amazonaws.com/",
+        "https://dvpzbd5az0.execute-api.us-west-2.amazonaws.com/production/v4/games",
         {
           method: "POST",
           headers: {
