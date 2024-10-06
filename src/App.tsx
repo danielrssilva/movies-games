@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Movie, Game, Calendar, Unknown } from "./containers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Navigation from "./components/Navigation";
+import VersionDisplay from "./components/VersionDisplay";
 
 const queryClient = new QueryClient();
 
@@ -19,9 +20,7 @@ const App: React.FC = () => {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="*" element={<Unknown />} />
           </Routes>
-          <div className="absolute bottom-4 right-4 text-white text-xs opacity-50">
-            v{process.env.REACT_APP_VERSION}
-          </div>
+          <VersionDisplay />
         </div>
       </Router>
     </QueryClientProvider>

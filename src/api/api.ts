@@ -21,6 +21,8 @@ const updateGame = (game: Partial<Game>): Promise<Game> =>
   axios.put(`${API_URL}/games?id=${game._id}`, game).then((res) => res.data);
 const deleteGame = (id: string): Promise<void> =>
   axios.delete(`${API_URL}/games?id=${id}`).then((res) => res.data);
+const searchGame = (search: string): Promise<Game[]> =>
+  axios.get(`${API_URL}/games/search?search=${search}`).then((res) => res.data);
 
 const fetchActivities = (): Promise<Activity[]> =>
   axios.get(`${API_URL}/activity`).then((res) => {
@@ -79,7 +81,7 @@ export const useGames = () =>
 
 export const useAddGame = () => {
   const queryClient = useQueryClient();
-  return useMutation<Game, Error, Omit<Game, "_id">>({
+  return useMutation<Game, Error, Game>({
     mutationFn: addGame,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["games"] });
@@ -105,6 +107,13 @@ export const useDeleteGame = () => {
       queryClient.invalidateQueries({ queryKey: ["games"] });
       queryClient.invalidateQueries({ queryKey: ["activities"] });
     },
+  });
+};
+
+export const useSearchGame = (onSuccess: () => void) => {
+  return useMutation<Game[], Error, string>({
+    mutationFn: searchGame,
+    onSuccess,
   });
 };
 

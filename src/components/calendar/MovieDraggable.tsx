@@ -20,17 +20,10 @@ const MovieDraggable: React.FC<MovieDraggableProps> = ({ movie }) => {
   return (
     <div
       ref={dragRef}
-      className={`flex flex-col gap-2 relative flex items-center justify-center w-[230px] h-[105px] bg-darkest-grey rounded-lg group overflow-visible border-t-[10px] border-[#282828] ${
+      className={`flex flex-col gap-2 relative flex items-center justify-center w-[264px] h-[390px] bg-darkest-grey rounded-lg group overflow-visible border-t-[10px] border-[#282828] ${
         isDragging ? "opacity-10" : ""
       }`}
     >
-      <span className="absolute -left-9 flex justify-between w-full px-4">
-        <img
-          src={`images/${movie.person}.png`}
-          className="w-11 h-11 rounded-lg"
-          alt={movie.person}
-        />
-      </span>
       <span className="absolute -top-2">
         <svg
           width="10"
@@ -47,20 +40,26 @@ const MovieDraggable: React.FC<MovieDraggableProps> = ({ movie }) => {
           <ellipse cx="9" cy="5.00012" rx="1" ry="1" fill="#E7E6E7" />
         </svg>
       </span>
-      <h3 className="text-white text-[24px] font-bold w-full text-left line-clamp-2 px-8">
-        {movie.movieName.split("").map((letter, index) => (
-          <AnimatePresence key={`movie-letter-${letter}-${index}`}>
-            <motion.span
-              variants={LetterAnimation}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: index * 0.05 }}
-            >
-              {letter}
-            </motion.span>
-          </AnimatePresence>
-        ))}
-      </h3>
+      <>
+        <img
+          src={movie.poster}
+          alt={movie.movieName}
+          className="w-full h-full object-cover rounded-lg"
+        />
+        <span className="absolute h-full w-full bg-gradient-to-b from-black to-transparent rounded-b-lg" />
+      </>
+      <span className="absolute flex justify-center -bottom-5 w-full px-4">
+        <img
+          src={`images/${movie.person}.png`}
+          className="w-11 h-11 rounded-lg"
+          alt={movie.person}
+        />
+      </span>
+      <div className="flex flex-col absolute top-5 items-center max-w-48">
+        <h3 className="text-white text-lg font-black text-center">
+          {movie.movieName}
+        </h3>
+      </div>
     </div>
   );
 };

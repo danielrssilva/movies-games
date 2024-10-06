@@ -12,11 +12,10 @@ import Year from "../components/calendar/Year";
 import { dayAnimation } from "../helpers/animations";
 import CollapseButton from "../components/CollapseButton";
 import { groupAndOrderMovies } from "../helpers/movies";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const Calendar: React.FC = () => {
   const [thisYearMondays, setThisYearMondays] = useState<Date[]>([]);
-  const [nextYearMondays, setNextYearMondays] = useState<Date[]>([]);
-  const [isNextYearCollapsed, setIsNextYearCollapsed] = useState(true);
   const { data: activities = [], isLoading: isLoadingActivities } =
     useGetActivities();
   const { data: games = [], isLoading: isLoadingGames } = useGames();
@@ -30,8 +29,7 @@ const Calendar: React.FC = () => {
     const date = new Date(new Date().getFullYear(), 0, 1),
       year = date.getFullYear(),
       nextYear = year + 1,
-      mondays: Date[] = [],
-      nextYearMondays: Date[] = [];
+      mondays: Date[] = [];
     date.setDate(1);
 
     while (date.getDay() !== 1) {
@@ -53,18 +51,6 @@ const Calendar: React.FC = () => {
     while (date.getDay() !== 1) {
       date.setDate(date.getDate() + 1);
     }
-    while (date.getFullYear() === nextYear) {
-      let pushDate = new Date(date.getTime());
-      nextYearMondays.push(
-        new Date(
-          `${pushDate.getFullYear()}-${
-            pushDate.getMonth() + 1
-          }-${pushDate.getDate()}`
-        )
-      );
-      date.setDate(date.getDate() + 7);
-    }
-    setNextYearMondays(nextYearMondays);
   }, []);
 
   return (
@@ -72,54 +58,20 @@ const Calendar: React.FC = () => {
       <div className="max-h-full w-full">
         <section className="flex flex-col gap-8">
           <div className="flex flex-col">
-            <h3 className="text-white text-[24px] font-bold">
-              {`${new Date().getFullYear()} `}
-              {isLoadingActivities && (
-                <span className="text-lightest-grey text-sm font-normal">
-                  Carregando...
-                </span>
-              )}
-            </h3>
-            <div className="w-auto grid grid-flow-col gap-8 overflow-x-auto py-5 pr-5">
-              <Year mondays={thisYearMondays} activities={activities} />
+            <div className="flex gap-2 items-center">
+              <h3 className="text-white text-[24px] font-bold">
+                {`${new Date().getFullYear()} `}
+              </h3>
+              {isLoadingActivities && <LoadingIndicator />}
+            </div>
+            <div className="w-auto grid grid-flow-col gap-8 overflow-x-auto py-5 pr-5 min-h-[453px]">
+              <Year
+                mondays={thisYearMondays}
+                activities={activities}
+                isLoading={isLoadingActivities}
+              />
             </div>
           </div>
-          {new Date().getMonth() > 10 && (
-            <div className="flex flex-col">
-              <div className="flex gap-4 items-center">
-                <h3 className="text-white text-[24px] font-bold">
-                  {`${new Date().getFullYear() + 1} `}
-                  {isLoadingActivities && (
-                    <span className="text-lightest-grey text-sm font-normal">
-                      Carregando...
-                    </span>
-                  )}
-                </h3>
-                <CollapseButton
-                  isCollapsed={isNextYearCollapsed}
-                  setIsCollapsed={setIsNextYearCollapsed}
-                />
-              </div>
-              <AnimatePresence mode="popLayout">
-                {!isNextYearCollapsed && (
-                  <motion.div
-                    initial={{ opacity: 1, height: "auto", overflow: "hidden" }}
-                    animate={{ opacity: 1, height: "auto", overflow: "auto" }}
-                    exit={{
-                      translateY: -50,
-                      opacity: 0,
-                      height: 0,
-                      overflow: "hidden",
-                    }}
-                    key={`next-year-${new Date().getFullYear() + 1}`}
-                    className={`w-auto grid grid-flow-col gap-8 overflow-x-auto py-5 pr-5`}
-                  >
-                    <Year mondays={nextYearMondays} activities={activities} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
         </section>
         <div className="flex justify-between gap-24">
           <section className="flex flex-col gap-8 w-1/2">

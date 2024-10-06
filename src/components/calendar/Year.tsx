@@ -6,11 +6,11 @@ import { dayAnimation } from "../../helpers/animations";
 interface YearProps {
   activities: Activity[];
   mondays: Date[];
+  isLoading: boolean;
 }
 
 const Year = (props: YearProps) => {
-  const { activities, mondays } = props;
-
+  const { activities, mondays, isLoading } = props;
   return (
     <>
       <motion.div
@@ -29,6 +29,7 @@ const Year = (props: YearProps) => {
             ).length
           }
           weeksCount={0}
+          isLoading={isLoading}
         />
       </motion.div>
       {mondays?.map((monday, index) => {
@@ -56,6 +57,7 @@ const Year = (props: YearProps) => {
                     ).length
                   }
                   weeksCount={0}
+                  isLoading={isLoading}
                 />
               </motion.div>
               <motion.div
@@ -63,7 +65,7 @@ const Year = (props: YearProps) => {
                 variants={dayAnimation}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.5 }}
+                viewport={{ once: true, amount: 0.3 }}
               >
                 <Day
                   activity={
@@ -78,6 +80,7 @@ const Year = (props: YearProps) => {
                   day={monday.getDate()}
                   month={monday.getMonth() + 1}
                   year={monday.getFullYear()}
+                  isLoading={isLoading}
                 />
               </motion.div>
             </AnimatePresence>
@@ -89,7 +92,7 @@ const Year = (props: YearProps) => {
               variants={dayAnimation}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.3 }}
             >
               <Day
                 activity={
@@ -104,6 +107,7 @@ const Year = (props: YearProps) => {
                 day={monday.getDate()}
                 month={monday.getMonth() + 1}
                 year={monday.getFullYear()}
+                isLoading={isLoading}
               />
             </motion.div>
           );

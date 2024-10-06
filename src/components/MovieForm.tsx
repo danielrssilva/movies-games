@@ -22,10 +22,14 @@ const MovieForm: React.FC<MovieFormProps> = ({
   const [showPersonDropdown, setShowPersonDropdown] = useState(false);
   const [showMovieDropdown, setShowMovieDropdown] = useState(false);
 
-  const test = () => {
+  const openMovieDropdown = () => {
     setShowMovieDropdown(true);
   };
-  const { mutate: searchMovies, data: searchResults } = useSearchMovies(test);
+  const {
+    mutate: searchMovies,
+    data: searchResults,
+    reset: clearMovieSearch,
+  } = useSearchMovies(openMovieDropdown);
 
   const togglePersonDropdown = () => {
     setShowPersonDropdown((prev) => !prev);
@@ -45,7 +49,7 @@ const MovieForm: React.FC<MovieFormProps> = ({
     e.preventDefault();
     onSubmit(e);
     movie = null;
-    setShowMovieDropdown(false);
+    clearMovieSearch();
     setIsCollapsed(true);
   };
 
@@ -80,11 +84,37 @@ const MovieForm: React.FC<MovieFormProps> = ({
               <button
                 onClick={() => handleMovieChange(movie)}
                 key={`${movie.Title}-${movie.Year}`}
-                className="w-full font-bold border-b border-border-grey p-2 cursor-pointer gap-2 flex items-end"
+                className="w-full font-bold border-b border-border-grey p-2 cursor-pointer gap-2 flex items-center"
               >
-                {movie.Title}
-                <span className="text-light-grey-span font-light text-sm pb-1">{`(${movie.Year})`}</span>
+                {movie.Poster && (
+                  <div className="w-[45px] h-[60px]">
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                      className="w-[45px] h-[60px] object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 h-[60px] w-32 items-center justify-between gap-4">
+                  <span
+                    className="text-left truncate overflow-hidden"
+                    title={movie.Title}
+                  >
+                    {movie.Title}
+                  </span>
+                  <span className="text-light-grey-span font-montserrat font-light text-[12px] leading-3">
+                    {movie.Year}
+                  </span>
+                </div>
               </button>
+              // <button
+              //   onClick={() => handleMovieChange(movie)}
+              //   key={`${movie.Title}-${movie.Year}`}
+              //   className="w-full font-bold border-b border-border-grey p-2 cursor-pointer gap-2 flex items-end"
+              // >
+              //   {movie.Title}
+              //   <span className="text-light-grey-span font-light text-sm pb-1">{`(${movie.Year})`}</span>
+              // </button>
             ))}
           </div>
         )}

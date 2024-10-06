@@ -1,23 +1,40 @@
 import React, { useState } from "react";
 import CollapseButton from "./CollapseButton";
+import { useAddGame, useSearchGame } from "../api/api";
+import SearchInput from "./SearchInput";
 
-interface GameFormProps {
-  gameName: string;
-  onGameNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
-}
+interface GameFormProps {}
 
-const GameForm: React.FC<GameFormProps> = ({
-  gameName,
-  onGameNameChange,
-  onSubmit,
-}) => {
+const GameForm: React.FC<GameFormProps> = () => {
+  const [game, setGame] = useState<Game | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [showGameDropdown, setShowGameDropdown] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const openGameDropdown = () => {
+    setShowGameDropdown(true);
+  };
+
+  const {
+    mutate: searchGame,
+    data: searchResults,
+    reset: clearGameSearch,
+  } = useSearchGame(openGameDropdown);
+  const { mutate: addGame } = useAddGame();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(e);
-    setIsCollapsed(true);
+    if (game) {
+      addGame({ ...game, isRecurring });
+      clearGameSearch();
+      setIsCollapsed(true);
+      setGame(null);
+      setIsRecurring(false);
+    }
+  };
+
+  const selectGame = (game: Game) => {
+    setGame(game);
+    clearGameSearch();
   };
 
   return (
@@ -40,17 +57,78 @@ const GameForm: React.FC<GameFormProps> = ({
       </header>
       <div className="mb-4 relative">
         <div className="relative flex flex-col gap-2">
-          <label className="font-monomaniac-one text-lightest-grey tracking-widest">
-            Qual jogo?
-          </label>
-          <input
-            type="text"
-            className="w-full px-4 pr-10 pl-0 text-sm border-b border-border-grey placeholder:text-border-grey pt-1 pb-3 text-lg font-montserrat uppercase font-bold text-white bg-darkest-grey focus:outline-none"
-            placeholder=""
-            value={gameName}
-            onChange={onGameNameChange}
-          />
-          <div className="absolute inset-y-0 top-5 right-0 flex items-center pr-3 pointer-events-none">
+          <div className="mb-4 relative">
+            <SearchInput
+              value={game?.name || ""}
+              onChange={searchGame}
+              label="Qual jogo?"
+              id="gameName"
+            />
+            {!!searchResults?.length && showGameDropdown && (
+              <div className="z-10 absolute rounded max-h-[200px] overflow-y-auto p-4 top-20 left-0 w-full h-auto bg-light-bg-grey text-white uppercase text-lg">
+                {searchResults?.map((game: Game) => (
+                  <button
+                    onClick={() => selectGame(game)}
+                    key={`${game.id}-game`}
+                    className="w-full font-bold border-b border-border-grey p-2 cursor-pointer gap-2 flex items-center"
+                  >
+                    {game.cover?.url && (
+                      <div className="w-[45px] h-[60px]">
+                        <img
+                          src={game.cover?.url?.replace(
+                            "t_thumb",
+                            "t_cover_small"
+                          )}
+                          alt={game.name}
+                          className="w-[45px] h-[60px] object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 h-[60px] w-32 items-center justify-between gap-4">
+                      <span
+                        className="text-left truncate overflow-hidden"
+                        title={game.name}
+                      >
+                        {game.name}
+                      </span>
+                      {game.involved_companies?.at(0)?.company.name && (
+                        <span className="text-light-grey-span font-montserrat font-light text-[12px] leading-3">
+                          {game.involved_companies?.at(0)?.company.name}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="text-white">
+            <label className="font-monomaniac-one text-lightest-grey tracking-widest">
+              É um jogo recorrente?
+            </label>
+            <div className="flex gap-2 font-montserrat uppercase font-bold text-white uppercase pointer">
+              <button
+                type="button"
+                className={`"font-montserrat uppercase font-bold ${
+                  !isRecurring ? "text-white" : "text-light-grey"
+                } uppercase"`}
+                onClick={() => setIsRecurring(false)}
+              >
+                Não
+              </button>
+              <span>/</span>
+              <button
+                type="button"
+                className={`"font-montserrat uppercase font-bold ${
+                  isRecurring ? "text-white" : "text-light-grey"
+                } uppercase"`}
+                onClick={() => setIsRecurring(true)}
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+          {/* <div className="absolute inset-y-0 top-5 right-0 flex items-center pr-3 pointer-events-none">
             <svg
               width="20"
               height="20"
@@ -85,7 +163,7 @@ const GameForm: React.FC<GameFormProps> = ({
                 fill="#A4A4A4"
               />
             </svg>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* <div className="mb-4 relative">
