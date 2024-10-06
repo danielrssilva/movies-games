@@ -104,7 +104,7 @@ const handler = async (req, res) => {
       }
     } else if (
       req.url.startsWith("/games/search") ||
-      req.url.startsWith("/games/search")
+      req.url.startsWith("/api/games/search")
     ) {
       const clientId = process.env.TWITCH_CLIENT_ID;
       const clientSecret = process.env.TWITCH_CLIENT_SECRET;
